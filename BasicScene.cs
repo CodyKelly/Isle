@@ -14,7 +14,7 @@ namespace NewProject
 
       var player = CreateEntity("player", new Vector2(Screen.Width / 2, Screen.Height / 2));
 
-      var playerTex = Content.LoadTexture("Content/DVD_logo.png");
+      var playerTex = Content.LoadTexture(Nez.Content.Textures.DVD_logo);
       player.AddComponent(new SpriteRenderer(playerTex));
       player.SetScale(new Vector2(.2f, .2f));
       player.AddComponent(new Bouncer());

@@ -11,7 +11,12 @@ namespace Nez
     /// </remarks>
     class Content
     {
-		public const string Icon = @"./Content/Icon.bmp";
+		public static class Textures
+		{
+			public const string DVD_logo = @"Content/Textures/DVD_logo.png";
+			public const string Icon = @"Content/Textures/Icon.bmp";
+		}
+
 
     }
 }

@@ -1,6 +1,8 @@
 using Nez;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Nez.Sprites;
+using Nez.Textures;
 using Nez.ImGuiTools;
 
 namespace NewProject
@@ -15,24 +17,72 @@ namespace NewProject
     SubpixelVector2 _subpixelV2 = new SubpixelVector2();
 
     [Inspectable]
-    float speed = 1000f;
+    float speed = 100f;
 
     Mover _mover;
+    SpriteAnimator _animator;
+    BoxCollider _boxCollider;
 
     public void Update()
     {
       var moveDir = new Vector2(_xAxisInput.Value, _yAxisInput.Value);
-      Debug.Log(moveDir);
-      var movement = moveDir * speed * Time.DeltaTime;
-      _mover.CalculateMovement(ref movement, out var res);
-      _subpixelV2.Update(ref movement);
-      _mover.ApplyMovement(movement);
+
+      if (moveDir != Vector2.Zero)
+      {
+        _animator.FlipX = false;
+
+        var animation = "down";
+
+        if (moveDir.X < 0)
+        {
+          animation = "right";
+          _animator.FlipX = true;
+        }
+        else if (moveDir.X > 0)
+          animation = "right";
+
+        if (moveDir.Y < 0)
+          animation = "up";
+        else if (moveDir.Y > 0)
+          animation = "down";
+
+        if (!_animator.IsAnimationActive(animation))
+          _animator.Play(animation);
+        else
+          _animator.UnPause();
+
+        var movement = moveDir * speed * Time.DeltaTime;
+        var bounds = _boxCollider.Bounds;
+        _animator.SetRenderLayer(-(int)bounds.Bottom - (int)(bounds.Height / 2f));
+        _subpixelV2.Update(ref movement);
+        _mover.ApplyMovement(movement);
+      }
+      else
+      {
+        _animator.Pause();
+      }
     }
 
     public override void OnAddedToEntity()
     {
+      Entity.SetScale(new Vector2(2f, 2f));
+      _animator = Entity.AddComponent<SpriteAnimator>();
       _mover = Entity.AddComponent(new Mover());
+      _boxCollider = Entity.AddComponent<BoxCollider>();
       SetupInput();
+      SetupAnimations();
+    }
+
+    void SetupAnimations()
+    {
+      float animFramerate = 4f;
+      var downAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Armorlancer.Armorlancerdownpng);
+      var sideAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Armorlancer.Armorlancersidepng);
+      var upAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Armorlancer.Armorlanceruppng);
+      _animator.AddAnimation("right", new SpriteAnimation(Sprite.SpritesFromAtlas(sideAtlas, 16, 16).ToArray(), animFramerate));
+      _animator.AddAnimation("down", new SpriteAnimation(Sprite.SpritesFromAtlas(downAtlas, 16, 16).ToArray(), animFramerate));
+      _animator.AddAnimation("up", new SpriteAnimation(Sprite.SpritesFromAtlas(upAtlas, 16, 16).ToArray(), animFramerate));
+      _animator.Play("down");
     }
 
     void SetupInput()

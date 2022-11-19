@@ -18,6 +18,6 @@ public class Game1 : Nez.Core
     imGuiManager.Enabled = false;
 
     Window.AllowUserResizing = true;
-    Window.IsBorderless = true;
+    // Window.IsBorderless = true;
   }
 }

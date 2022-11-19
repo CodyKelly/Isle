@@ -103,7 +103,7 @@ namespace Nez
 			if( Keywords.Contains( fileInfo.Name ) )
 				className = className.Insert( 0, "@" );
 
-			WriteLine( "{0}public const string {1} = @\"{2}\";", firstIndent, className, finalPath );
+			WriteLine( "{0}public const string {1}{2} = @\"{3}\";", firstIndent, className, fileInfo.Extension.Substring(1), finalPath );
 		}
 	}
     

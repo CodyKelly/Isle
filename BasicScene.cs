@@ -40,8 +40,8 @@ namespace NewProject
 
     private void CreateTrees(Sprite[] sprites)
     {
-      int numTrees = 1000;
-      float maxRange = 50;
+      int numTrees = 10000;
+      float maxRange = 100;
       float multiplier = 32f;
 
       for (int i = 0; i < numTrees; i++)

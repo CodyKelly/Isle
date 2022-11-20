@@ -9,7 +9,7 @@
 
 <#
     // Paths to the content folders, relative to the .tt file
-	string[] sourceFolders = new string[] { "Content" }; 
+	string[] sourceFolders = new string[] { "../Content" }; 
 #>
 
 namespace Nez

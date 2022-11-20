@@ -13,7 +13,7 @@
 	</ItemGroup>
   
 	<ItemGroup>
-		<Compile Update="ContentPathGenerator.cs">
+		<Compile Update="Util\ContentPathGenerator.cs">
 			<DependentUpon>ContentPathGenerator.tt</DependentUpon>
 		</Compile>
 		<Compile Include="..\Nez\Nez.Portable\Graphics\SVG\Shapes\Paths\SvgPathBuilder.cs" Link="Shared\SvgPathBuilder.cs" />
@@ -39,9 +39,9 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<None Include="ContentPathGenerator.tt">
+		<None Include="Util\ContentPathGenerator.tt">
 			<Generator>TextTemplatingFileGenerator</Generator>
-			<LastGenOutput>ContentPathGenerator.cs</LastGenOutput>
+			<LastGenOutput>Util\ContentPathGenerator.cs</LastGenOutput>
 		</None>
 	</ItemGroup>
 

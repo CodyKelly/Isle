@@ -1,0 +1,7 @@
+namespace NewProject
+{
+  class Tile
+  {
+
+  }
+}

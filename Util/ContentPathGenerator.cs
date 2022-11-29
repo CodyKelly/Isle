@@ -196,10 +196,10 @@ namespace Nez
 			}
 
 			public const string DVD_logopng = @"../Content/Textures/DVD_logo.png";
+			public const string Groundpng = @"../Content/Textures/ground.png";
 			public const string Terrain_atlaspng = @"../Content/Textures/terrain_atlas.png";
 		}
 
-		public const string ContentBuildmgcb = @"home/cody/Code/MonoGame/NewProject/Util/../Content/ContentBuild.mgcb";
 
     }
 }

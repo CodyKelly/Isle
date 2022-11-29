@@ -12,12 +12,12 @@ namespace NewProject
 
     VirtualButton _fireInput;
     [Inspectable]
-    VirtualIntegerAxis _xAxisInput;
-    VirtualIntegerAxis _yAxisInput;
+    VirtualAxis _xAxisInput;
+    VirtualAxis _yAxisInput;
     SubpixelVector2 _subpixelV2 = new SubpixelVector2();
 
     [Inspectable]
-    float speed = 100f;
+    float speed = 300f;
 
     Mover _mover;
     SpriteAnimator _animator;
@@ -26,6 +26,13 @@ namespace NewProject
     public void Update()
     {
       var moveDir = new Vector2(_xAxisInput.Value, _yAxisInput.Value);
+
+      var mouseWheelDelta = Input.MouseWheelDelta;
+      // float speed = -(float)Math.Log10(_camera.RawZoom) * ZoomSpeed;
+      if (mouseWheelDelta != 0)
+      {
+
+      }
 
       if (moveDir != Vector2.Zero)
       {
@@ -65,7 +72,7 @@ namespace NewProject
 
     public override void OnAddedToEntity()
     {
-      Entity.SetScale(new Vector2(2f, 2f));
+      Entity.Scale = Vector2.One * 3f;
       _animator = Entity.AddComponent<SpriteAnimator>();
       _mover = Entity.AddComponent(new Mover());
       _boxCollider = Entity.AddComponent<BoxCollider>();
@@ -93,13 +100,13 @@ namespace NewProject
       _fireInput.Nodes.Add(new VirtualButton.GamePadButton(0, Buttons.A));
 
       // horizontal input from dpad, left stick or keyboard left/right
-      _xAxisInput = new VirtualIntegerAxis();
+      _xAxisInput = new VirtualAxis();
       _xAxisInput.Nodes.Add(new VirtualAxis.GamePadDpadLeftRight());
       _xAxisInput.Nodes.Add(new VirtualAxis.GamePadLeftStickX());
       _xAxisInput.Nodes.Add(new VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.Left, Keys.Right));
 
       // vertical input from dpad, left stick or keyboard up/down
-      _yAxisInput = new VirtualIntegerAxis();
+      _yAxisInput = new VirtualAxis();
       _yAxisInput.Nodes.Add(new VirtualAxis.GamePadDpadUpDown());
       _yAxisInput.Nodes.Add(new VirtualAxis.GamePadLeftStickY());
       _yAxisInput.Nodes.Add(new VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.Up, Keys.Down));

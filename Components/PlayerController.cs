@@ -17,7 +17,7 @@ namespace NewProject
     SubpixelVector2 _subpixelV2 = new SubpixelVector2();
 
     [Inspectable]
-    float speed = 300f;
+    float speed = 500f;
 
     Mover _mover;
     SpriteAnimator _animator;

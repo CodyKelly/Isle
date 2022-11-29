@@ -1,36 +1,36 @@
-using Microsoft.Xna.Framework;
-using NewProject;
 using Nez;
+using Microsoft.Xna.Framework;
 
 namespace NewProject
 {
-  class Map : Component
+  class Map
   {
     public int Width { get; set; } = 100;
     public int Height { get; set; } = 100;
 
-    int[,] mapData;
+    public int TileSize { get; } = 32;
 
-    public override void OnAddedToEntity()
-    {
-      mapData = new int[Width, Height];
-      GenerateMap();
-    }
+    public int[,] Tiles { get; set; }
 
-    private void GenerateMap()
+    public void Generate()
     {
+      Tiles = new int[Width, Height];
       for (int y = 0; y < Height; y++)
       {
         for (int x = 0; x < Width; x++)
         {
-          mapData[x, y] = 1;
+          int tileValue = 0;
+          float randValue = Random.NextFloat();
+          if (randValue > 0.95f)
+          {
+            tileValue = Random.Range(1, 7);
+          }
+          Tiles[x, y] = tileValue;
         }
       }
     }
 
-    public int GetRenderLayerFromYCoordinate(int yCoordinate)
-    {
-      return 1;
-    }
+    public int WorldToTilePositionX(float x) => (int)(x / TileSize);
+    public int WorldToTilePositionY(float y) => (int)(y / TileSize);
   }
 }

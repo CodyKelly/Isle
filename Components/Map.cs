@@ -5,8 +5,14 @@ namespace NewProject
 {
   class Map
   {
-    public int Width { get; set; } = 100;
-    public int Height { get; set; } = 100;
+    public Map(int width, int height)
+    {
+      Width = width;
+      Height = height;
+    }
+
+    public int Width { get; }
+    public int Height { get; }
 
     public int TileSize { get; } = 32;
 

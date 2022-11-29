@@ -20,9 +20,10 @@ namespace NewProject
       SetDefaultDesignResolution(1024, 1024, SceneResolutionPolicy.ShowAllPixelPerfect);
       Screen.SetSize(1024, 720);
 
-      var map = new Map();
+      var map = new Map(1000, 1000);
       map.Generate();
       var mapEntity = CreateEntity("Map");
+      // mapEntity.Scale = Vector2.One * 2f;
       Dictionary<int, Sprite> tileAtlas = new Dictionary<int, Sprite>();
       var atlas = Content.LoadTexture(Nez.Content.Textures.Terrain_atlaspng);
       tileAtlas.Add(0, new Sprite(atlas, new Rectangle(32 * 22, 32 * 3, 32, 32), Vector2.Zero));
@@ -34,17 +35,17 @@ namespace NewProject
       tileAtlas.Add(6, new Sprite(atlas, new Rectangle(32 * 23, 32 * 11, 32, 32), Vector2.Zero));
       var mapRenderer = mapEntity.AddComponent(new MapRenderer(map, tileAtlas));
       mapEntity.AddComponent(new CameraBounds(Vector2.Zero, Vector2.One * (map.Width - 1) * 32));
+      mapRenderer.RenderLayer = int.MaxValue;
 
-      // ClearColor = Color.Black;
-      // var atlas = Content.LoadTexture(Nez.Content.Textures.Terrain_atlaspng);
-      // List<Sprite> decorations = new List<Sprite>();
+      ClearColor = Color.Black;
+      List<Sprite> decorations = new List<Sprite>();
+      decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
+      decorations.Add(new Sprite(atlas, new Rectangle(32 * 15, 32 * 24, 32 * 1, 32 * 2), Vector2.Zero));
+      decorations.Add(new Sprite(atlas, new Rectangle(32 * 19, 32 * 15, 32 * 1, 32 * 3), Vector2.Zero));
+      decorations.Add(new Sprite(atlas, new Rectangle(32 * 11, 32 * 7, 32 * 1, 32 * 1), Vector2.Zero));
+      decorations.Add(new Sprite(atlas, new Rectangle(32 * 1, 1024 - 32, 32 * 1, 32 * 1), Vector2.Zero));
       // decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
-      // decorations.Add(new Sprite(atlas, new Rectangle(32 * 15, 32 * 24, 32 * 1, 32 * 2), Vector2.Zero));
-      // decorations.Add(new Sprite(atlas, new Rectangle(32 * 19, 32 * 15, 32 * 1, 32 * 3), Vector2.Zero));
-      // decorations.Add(new Sprite(atlas, new Rectangle(32 * 11, 32 * 7, 32 * 1, 32 * 1), Vector2.Zero));
-      // decorations.Add(new Sprite(atlas, new Rectangle(32 * 1, 1024 - 32, 32 * 1, 32 * 1), Vector2.Zero));
-      // // decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
-      // // decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
+      // decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
       var player = CreateEntity("player", new Vector2(Screen.Width / 2, Screen.Height / 2));
       player.AddComponent(new PlayerController());
 
@@ -55,7 +56,7 @@ namespace NewProject
       Camera.Entity.AddComponent(followCamera);
       Camera.Entity.AddComponent(new ScrollZoom(Camera));
       Camera.Entity.UpdateOrder = int.MaxValue;
-      Camera.MinimumZoom = .5f;
+      Camera.MinimumZoom = .25f;
       Camera.MaximumZoom = 2f;
 
 
@@ -72,8 +73,8 @@ namespace NewProject
 
       for (int i = 0; i < numTrees; i++)
       {
-        float x = (int)(Random.MinusOneToOne() / 2f * maxRange) * multiplier;
-        float y = (int)(Random.MinusOneToOne() / 2f * maxRange) * multiplier;
+        float x = (int)(Random.NextFloat() * maxRange) * multiplier;
+        float y = (int)(Random.NextFloat() * maxRange) * multiplier;
         var position = new Vector2(x, y);
         var newTree = CreateEntity("tree", position);
         newTree.Scale = Vector2.One * 2f;

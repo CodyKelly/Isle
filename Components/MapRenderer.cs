@@ -36,11 +36,13 @@ namespace NewProject
       int top = mapTop - extra >= 0 ? mapTop - extra : 0;
       int bottom = mapBottom + extra < Map.Height ? mapBottom + extra : Map.Height - 1;
 
+      float scale = Entity.LocalScale.X;
+
       for (int y = top; y < bottom; y++)
       {
         for (int x = left; x < right; x++)
         {
-          batcher.Draw(TileAtlas[Map.Tiles[x, y]], new Vector2(x * 32, y * 32), Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, LayerDepth);
+          batcher.Draw(TileAtlas[Map.Tiles[x, y]], new Vector2(x * 32 * scale, y * 32 * scale), Color.White, 0f, Vector2.Zero, scale, SpriteEffects.None, LayerDepth);
         }
       }
     }

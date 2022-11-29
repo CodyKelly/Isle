@@ -23,10 +23,7 @@ namespace NewProject
       if (delta != 0)
       {
         var zoomAmount = (float)delta * ZoomSpeed * Time.DeltaTime;
-        Debug.Log(zoomAmount);
         _camera.Zoom += zoomAmount;
-        Debug.Log(_camera.Zoom);
-        Debug.Log("\n");
       }
     }
 

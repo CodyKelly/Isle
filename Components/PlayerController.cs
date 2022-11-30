@@ -17,7 +17,7 @@ namespace NewProject
     SubpixelVector2 _subpixelV2 = new SubpixelVector2();
 
     [Inspectable]
-    float speed = 250f;
+    float speed = 750f;
 
     Mover _mover;
     SpriteAnimator _animator;
@@ -104,12 +104,14 @@ namespace NewProject
       _xAxisInput.Nodes.Add(new VirtualAxis.GamePadDpadLeftRight());
       _xAxisInput.Nodes.Add(new VirtualAxis.GamePadLeftStickX());
       _xAxisInput.Nodes.Add(new VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.Left, Keys.Right));
+      _xAxisInput.Nodes.Add(new VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.A, Keys.D));
 
       // vertical input from dpad, left stick or keyboard up/down
       _yAxisInput = new VirtualAxis();
       _yAxisInput.Nodes.Add(new VirtualAxis.GamePadDpadUpDown());
       _yAxisInput.Nodes.Add(new VirtualAxis.GamePadLeftStickY());
       _yAxisInput.Nodes.Add(new VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.Up, Keys.Down));
+      _yAxisInput.Nodes.Add(new VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.W, Keys.S));
     }
   }
 }

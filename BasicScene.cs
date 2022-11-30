@@ -17,13 +17,13 @@ namespace NewProject
 
       AddRenderer(new RenderLayerExcludeRenderer(0, new int[] { RenderLayers.SCREEN_SPACE_LAYER }));
       AddRenderer(new ScreenSpaceRenderer(1, new int[] { RenderLayers.SCREEN_SPACE_LAYER }));
-      SetDefaultDesignResolution(1024, 1024, SceneResolutionPolicy.ShowAllPixelPerfect);
+      // SetDefaultDesignResolution(1024, 1024, SceneResolutionPolicy.BestFit);
       Screen.SetSize(1024, 720);
 
-      var map = new Map(1000, 1000);
+      var map = new Map(200, 200);
       map.Generate();
       var mapEntity = CreateEntity("Map");
-      // mapEntity.Scale = Vector2.One * 2f;
+      mapEntity.Scale = Vector2.One * 2f;
       Dictionary<int, Sprite> tileAtlas = new Dictionary<int, Sprite>();
       var atlas = Content.LoadTexture(Nez.Content.Textures.Terrain_atlaspng);
       tileAtlas.Add(0, new Sprite(atlas, new Rectangle(32 * 22, 32 * 3, 32, 32), Vector2.Zero));
@@ -34,7 +34,7 @@ namespace NewProject
       tileAtlas.Add(5, new Sprite(atlas, new Rectangle(32 * 22, 32 * 11, 32, 32), Vector2.Zero));
       tileAtlas.Add(6, new Sprite(atlas, new Rectangle(32 * 23, 32 * 11, 32, 32), Vector2.Zero));
       var mapRenderer = mapEntity.AddComponent(new MapRenderer(map, tileAtlas));
-      mapEntity.AddComponent(new CameraBounds(Vector2.Zero, Vector2.One * (map.Width - 1) * 32));
+      mapEntity.AddComponent(new CameraBounds(mapRenderer.Bounds));
       mapRenderer.RenderLayer = int.MaxValue;
 
       ClearColor = Color.Black;
@@ -49,7 +49,7 @@ namespace NewProject
       var player = CreateEntity("player", new Vector2(Screen.Width / 2, Screen.Height / 2));
       player.AddComponent(new PlayerController());
 
-      // CreateTrees(decorations.ToArray());
+      CreateTrees(decorations.ToArray());
 
       var followCamera = new FollowCamera(player);
       followCamera.FollowLerp = 0.08f;
@@ -59,16 +59,14 @@ namespace NewProject
       Camera.MinimumZoom = .25f;
       Camera.MaximumZoom = 2f;
 
-
-
       Camera.AddComponent(new SelectionManager().SetRenderLayer(RenderLayers.SCREEN_SPACE_LAYER));
     }
 
     private void CreateTrees(Sprite[] sprites)
     {
-      int numTrees = 250;
-      float maxRange = 100;
-      float multiplier = 32f;
+      int numTrees = 1000;
+      float maxRange = 200;
+      float multiplier = 64f;
       float spawnWidth = maxRange * multiplier;
 
       for (int i = 0; i < numTrees; i++)
@@ -80,7 +78,7 @@ namespace NewProject
         newTree.Scale = Vector2.One * 2f;
         var newSpriteRenderer = new SpriteRenderer(sprites[Random.Range(0, sprites.Length)]);
         newTree.AddComponent(newSpriteRenderer);
-        var renderOrder = (int)Mathf.Map(newSpriteRenderer.Bounds.Bottom, -spawnWidth / 2f, spawnWidth / 2f, spawnWidth, 0);
+        var renderOrder = -(int)newSpriteRenderer.Bounds.Bottom;
         newSpriteRenderer.RenderLayer = renderOrder;
       }
     }

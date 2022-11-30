@@ -5,7 +5,7 @@ namespace NewProject
 {
   public class CameraBounds : Component, IUpdatable
   {
-    public Vector2 Min, Max;
+    public RectangleF Rect;
 
 
     public CameraBounds()
@@ -15,10 +15,9 @@ namespace NewProject
     }
 
 
-    public CameraBounds(Vector2 min, Vector2 max) : this()
+    public CameraBounds(RectangleF rect) : this()
     {
-      Min = min;
-      Max = max;
+      Rect = rect;
     }
 
 
@@ -32,17 +31,17 @@ namespace NewProject
     {
       var cameraBounds = Entity.Scene.Camera.Bounds;
 
-      if (cameraBounds.Top < Min.Y)
-        Entity.Scene.Camera.Position += new Vector2(0, Min.Y - cameraBounds.Top);
+      if (cameraBounds.Top < Rect.Top)
+        Entity.Scene.Camera.Position += new Vector2(0, Rect.Top - cameraBounds.Top);
 
-      if (cameraBounds.Left < Min.X)
-        Entity.Scene.Camera.Position += new Vector2(Min.X - cameraBounds.Left, 0);
+      if (cameraBounds.Left < Rect.Left)
+        Entity.Scene.Camera.Position += new Vector2(Rect.Left - cameraBounds.Left, 0);
 
-      if (cameraBounds.Bottom > Max.Y)
-        Entity.Scene.Camera.Position += new Vector2(0, Max.Y - cameraBounds.Bottom);
+      if (cameraBounds.Bottom > Rect.Bottom)
+        Entity.Scene.Camera.Position += new Vector2(0, Rect.Bottom - cameraBounds.Bottom);
 
-      if (cameraBounds.Right > Max.X)
-        Entity.Scene.Camera.Position += new Vector2(Max.X - cameraBounds.Right, 0);
+      if (cameraBounds.Right > Rect.Right)
+        Entity.Scene.Camera.Position += new Vector2(Rect.Right - cameraBounds.Right, 0);
     }
   }
 }

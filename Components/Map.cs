@@ -27,9 +27,13 @@ namespace NewProject
         {
           int tileValue = 0;
           float randValue = Random.NextFloat();
-          if (randValue > 0.95f)
+          if (randValue < 0.025)
           {
-            tileValue = Random.Range(1, 7);
+            tileValue = Random.Range(4, 7);
+          }
+          else if (randValue < 0.15)
+          {
+            tileValue = Random.Range(1, 4);
           }
           Tiles[x, y] = tileValue;
         }

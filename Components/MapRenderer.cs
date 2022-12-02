@@ -40,11 +40,16 @@ namespace NewProject
       {
         for (int x = left; x < right; x++)
         {
-          batcher.Draw(TileAtlas[Map.Tiles[x, y]], new Vector2(x * 32 * Transform.Scale.X, y * 32 * Transform.Scale.Y), Color.White, 0f, Vector2.Zero, Transform.Scale, SpriteEffects.None, LayerDepth);
+          batcher.Draw(TileAtlas[GetTile(Map.Tiles[x, y])], new Vector2(x * 32 * Transform.Scale.X, y * 32 * Transform.Scale.Y), Color.White, 0f, Vector2.Zero, Transform.Scale, SpriteEffects.None, LayerDepth);
           // batcher.DrawLine(new Vector2(x * Map.TileSize * Transform.Scale.X, 0), new Vector2(x * Map.TileSize * Transform.Scale.X, Map.Height * Map.TileSize * Transform.Scale.Y), Color.Yellow, 5f);
         }
         // batcher.DrawLine(new Vector2(0, y * Map.TileSize * Transform.Scale.Y), new Vector2(Map.Width * Map.TileSize * Transform.Scale.X, y * Map.TileSize * Transform.Scale.Y), Color.Yellow, 5f);
       }
+    }
+
+    private int GetTile(float tileValue)
+    {
+      return tileValue < 0.5f ? 7 : 0;
     }
   }
 }

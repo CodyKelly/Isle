@@ -16,26 +16,20 @@ namespace NewProject
 
     public int TileSize { get; } = 32;
 
-    public int[,] Tiles { get; set; }
+    public float[,] Tiles { get; set; }
+
+    private FastNoiseLite _noise = new FastNoiseLite();
 
     public void Generate()
     {
-      Tiles = new int[Width, Height];
+      _noise.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
+      _noise.SetSeed(Random.NextInt(1000000));
+      Tiles = new float[Width, Height];
       for (int y = 0; y < Height; y++)
       {
         for (int x = 0; x < Width; x++)
         {
-          int tileValue = 0;
-          float randValue = Random.NextFloat();
-          if (randValue < 0.025)
-          {
-            tileValue = Random.Range(4, 7);
-          }
-          else if (randValue < 0.15)
-          {
-            tileValue = Random.Range(1, 4);
-          }
-          Tiles[x, y] = tileValue;
+          Tiles[x, y] = _noise.GetNoise(x, y);
         }
       }
     }

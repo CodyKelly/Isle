@@ -7,7 +7,7 @@ namespace NewProject
 {
   class ScrollZoom : Component, IUpdatable
   {
-    public float ZoomSpeed { get; set; } = .2f;
+    public float ZoomSpeed { get; set; } = .02f;
 
     Camera _camera;
 

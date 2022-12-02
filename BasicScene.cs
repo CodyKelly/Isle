@@ -20,7 +20,7 @@ namespace NewProject
       // SetDefaultDesignResolution(1024, 1024, SceneResolutionPolicy.BestFit);
       Screen.SetSize(1024, 720);
 
-      var map = new Map(200, 200);
+      var map = new Map(500, 500);
       map.Generate();
       var mapEntity = CreateEntity("Map");
       mapEntity.Scale = Vector2.One * 2f;
@@ -33,6 +33,7 @@ namespace NewProject
       tileAtlas.Add(4, new Sprite(atlas, new Rectangle(32 * 21, 32 * 11, 32, 32), Vector2.Zero));
       tileAtlas.Add(5, new Sprite(atlas, new Rectangle(32 * 22, 32 * 11, 32, 32), Vector2.Zero));
       tileAtlas.Add(6, new Sprite(atlas, new Rectangle(32 * 23, 32 * 11, 32, 32), Vector2.Zero));
+      tileAtlas.Add(7, new Sprite(atlas, new Rectangle(32 * 7, 32 * 12, 32, 32), Vector2.Zero));
       var mapRenderer = mapEntity.AddComponent(new MapRenderer(map, tileAtlas));
       mapEntity.AddComponent(new CameraBounds(mapRenderer.Bounds));
       mapRenderer.RenderLayer = int.MaxValue;
@@ -46,19 +47,21 @@ namespace NewProject
       decorations.Add(new Sprite(atlas, new Rectangle(32 * 1, 1024 - 32, 32 * 1, 32 * 1), Vector2.Zero));
       // decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
       // decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
-      var player = CreateEntity("player", new Vector2(Screen.Width / 2, Screen.Height / 2));
-      player.AddComponent(new PlayerController());
+      // var player = CreateEntity("player", new Vector2(Screen.Width / 2, Screen.Height / 2));
+      // player.AddComponent(new PlayerController());
 
-      CreateTrees(decorations.ToArray());
+      // CreateTrees(decorations.ToArray());
 
-      var followCamera = new FollowCamera(player);
-      followCamera.FollowLerp = 0.08f;
-      Camera.Entity.AddComponent(followCamera);
+      // var followCamera = new FollowCamera(player);
+      // followCamera.FollowLerp = 0.08f;
+      // Camera.Entity.AddComponent(followCamera);
+      Camera.Entity.AddComponent(new CameraController());
       Camera.Entity.AddComponent(new ScrollZoom(Camera));
+      Camera.Entity.AddComponent(new GenerateNewMap(map));
       Camera.Entity.UpdateOrder = int.MaxValue;
-      Camera.MinimumZoom = .25f;
-      Camera.MaximumZoom = 2f;
-
+      Camera.MinimumZoom = .05f;
+      Camera.MaximumZoom = 1.5f;
+      Camera.Zoom = -1f;
       Camera.AddComponent(new SelectionManager().SetRenderLayer(RenderLayers.SCREEN_SPACE_LAYER));
     }
 

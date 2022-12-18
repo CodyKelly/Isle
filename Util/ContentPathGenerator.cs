@@ -17,6 +17,11 @@ namespace Nez
 			public const string Newfnt = @"../Content/Fonts/New.fnt";
 		}
 
+		public static class Maps
+		{
+			public const string GreenIslandjson = @"../Content/Maps/GreenIsland.json";
+		}
+
 		public static class Textures
 		{
 			public static class Character

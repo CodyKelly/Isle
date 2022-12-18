@@ -20,10 +20,6 @@ namespace NewProject
       // SetDefaultDesignResolution(1024, 1024, SceneResolutionPolicy.BestFit);
       Screen.SetSize(1024, 720);
 
-      var map = new Map(500, 500);
-      map.Generate();
-      var mapEntity = CreateEntity("Map");
-      mapEntity.Scale = Vector2.One * 2f;
       Dictionary<int, Sprite> tileAtlas = new Dictionary<int, Sprite>();
       var atlas = Content.LoadTexture(Nez.Content.Textures.Terrain_atlaspng);
       tileAtlas.Add(0, new Sprite(atlas, new Rectangle(32 * 22, 32 * 3, 32, 32), Vector2.Zero));
@@ -34,7 +30,33 @@ namespace NewProject
       tileAtlas.Add(5, new Sprite(atlas, new Rectangle(32 * 22, 32 * 11, 32, 32), Vector2.Zero));
       tileAtlas.Add(6, new Sprite(atlas, new Rectangle(32 * 23, 32 * 11, 32, 32), Vector2.Zero));
       tileAtlas.Add(7, new Sprite(atlas, new Rectangle(32 * 7, 32 * 12, 32, 32), Vector2.Zero));
-      var mapRenderer = mapEntity.AddComponent(new MapRenderer(map, tileAtlas));
+
+      Tile grassTile = new Tile(
+        "grass",
+        5,
+        0f,
+        1f,
+        new Sprite(atlas, new Rectangle(32 * 22, 32 * 3, 32, 32), Vector2.Zero),
+        new Dictionary<string, NinePatchSprite>(){
+          {"water", new NinePatchSprite(atlas, new Rectangle(6 * 32, 10 * 32, 32 * 3, 32 * 3), 32, 32, 32, 32)}
+        }
+        );
+
+      Tile waterTile = new Tile(
+        "water",
+        4,
+        -1f,
+        0f,
+        new Sprite(atlas, new Rectangle(32 * 7, 32 * 12, 32, 32), Vector2.Zero),
+        null
+      );
+
+
+      var mapEntity = CreateEntity("Map");
+      var map = mapEntity.AddComponent(new Map(500, 500, new Tile[] { waterTile, grassTile }));
+      map.Generate();
+      mapEntity.Scale = Vector2.One * 2f;
+      var mapRenderer = mapEntity.AddComponent(new MapRenderer(map));
       mapEntity.AddComponent(new CameraBounds(mapRenderer.Bounds));
       mapRenderer.RenderLayer = int.MaxValue;
 
@@ -47,15 +69,15 @@ namespace NewProject
       decorations.Add(new Sprite(atlas, new Rectangle(32 * 1, 1024 - 32, 32 * 1, 32 * 1), Vector2.Zero));
       // decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
       // decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
-      // var player = CreateEntity("player", new Vector2(Screen.Width / 2, Screen.Height / 2));
-      // player.AddComponent(new PlayerController());
+      var player = CreateEntity("player", new Vector2(Screen.Width / 2, Screen.Height / 2));
+      player.AddComponent(new PlayerController(map));
 
       // CreateTrees(decorations.ToArray());
 
-      // var followCamera = new FollowCamera(player);
-      // followCamera.FollowLerp = 0.08f;
-      // Camera.Entity.AddComponent(followCamera);
-      Camera.Entity.AddComponent(new CameraController());
+      var followCamera = new FollowCamera(player);
+      followCamera.FollowLerp = 0.08f;
+      Camera.Entity.AddComponent(followCamera);
+      // Camera.Entity.AddComponent(new CameraController());
       Camera.Entity.AddComponent(new ScrollZoom(Camera));
       Camera.Entity.AddComponent(new GenerateNewMap(map));
       Camera.Entity.UpdateOrder = int.MaxValue;

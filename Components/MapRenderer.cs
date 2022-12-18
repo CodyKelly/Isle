@@ -16,20 +16,17 @@ namespace NewProject
 
     private int extra = 5;
 
-    public Dictionary<int, Sprite> TileAtlas { get; }
-
-    public MapRenderer(Map map, Dictionary<int, Sprite> tileAtlas)
+    public MapRenderer(Map map)
     {
       Map = map;
-      TileAtlas = tileAtlas;
     }
 
     public override void Render(Batcher batcher, Camera camera)
     {
-      int mapLeft = (int)(Map.WorldToTilePositionX(camera.Bounds.Left) / Transform.Scale.X);
-      int mapRight = (int)(Map.WorldToTilePositionX(camera.Bounds.Right) / Transform.Scale.X);
-      int mapTop = (int)(Map.WorldToTilePositionY(camera.Bounds.Top) / Transform.Scale.Y);
-      int mapBottom = (int)(Map.WorldToTilePositionY(camera.Bounds.Bottom) / Transform.Scale.Y);
+      int mapLeft = (int)(Map.WorldToTilePositionX(camera.Bounds.Left));
+      int mapRight = (int)(Map.WorldToTilePositionX(camera.Bounds.Right));
+      int mapTop = (int)(Map.WorldToTilePositionY(camera.Bounds.Top));
+      int mapBottom = (int)(Map.WorldToTilePositionY(camera.Bounds.Bottom));
 
       int left = mapLeft - extra >= 0 ? mapLeft - extra : 0;
       int right = mapRight + extra < Map.Width ? mapRight + extra : Map.Width - 1;
@@ -40,16 +37,27 @@ namespace NewProject
       {
         for (int x = left; x < right; x++)
         {
-          batcher.Draw(TileAtlas[GetTile(Map.Tiles[x, y])], new Vector2(x * 32 * Transform.Scale.X, y * 32 * Transform.Scale.Y), Color.White, 0f, Vector2.Zero, Transform.Scale, SpriteEffects.None, LayerDepth);
+          Tile[] tileBlock = new Tile[9];
+          int count = 0;
+          for (int neighborY = y - 1; neighborY < y + 1; neighborY++)
+          {
+            for (int neighborX = x - 1; neighborX < x + 1; neighborX++)
+            {
+              tileBlock[count] = Map.GetTile(x, y);
+              count++;
+            }
+          }
+          Sprite tileSprite = getSprite(tileBlock);
+          batcher.Draw(tileSprite, new Vector2(x * 32 * Transform.Scale.X, y * 32 * Transform.Scale.Y), Color.White, 0f, Vector2.Zero, Transform.Scale, SpriteEffects.None, LayerDepth);
           // batcher.DrawLine(new Vector2(x * Map.TileSize * Transform.Scale.X, 0), new Vector2(x * Map.TileSize * Transform.Scale.X, Map.Height * Map.TileSize * Transform.Scale.Y), Color.Yellow, 5f);
         }
         // batcher.DrawLine(new Vector2(0, y * Map.TileSize * Transform.Scale.Y), new Vector2(Map.Width * Map.TileSize * Transform.Scale.X, y * Map.TileSize * Transform.Scale.Y), Color.Yellow, 5f);
       }
     }
 
-    private int GetTile(float tileValue)
+    private Sprite getSprite(Tile[] tileBlock)
     {
-      return tileValue < 0.5f ? 7 : 0;
+      return null;
     }
   }
 }

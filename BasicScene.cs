@@ -22,7 +22,7 @@ namespace NewProject
 
       Dictionary<int, Sprite> tileAtlas = new Dictionary<int, Sprite>();
       var atlas = Content.LoadTexture(Nez.Content.Textures.Terrain_atlaspng);
-      tileAtlas.Add(0, new Sprite(atlas, new Rectangle(32 * 22, 32 * 3, 32, 32), Vector2.Zero));
+      tileAtlas.Add(0, new Sprite(atlas, new Rectangle(320, 401, 32, 32), Vector2.Zero));
       tileAtlas.Add(1, new Sprite(atlas, new Rectangle(32 * 21, 32 * 5, 32, 32), Vector2.Zero));
       tileAtlas.Add(2, new Sprite(atlas, new Rectangle(32 * 22, 32 * 5, 32, 32), Vector2.Zero));
       tileAtlas.Add(3, new Sprite(atlas, new Rectangle(32 * 23, 32 * 5, 32, 32), Vector2.Zero));
@@ -31,20 +31,34 @@ namespace NewProject
       tileAtlas.Add(6, new Sprite(atlas, new Rectangle(32 * 23, 32 * 11, 32, 32), Vector2.Zero));
       tileAtlas.Add(7, new Sprite(atlas, new Rectangle(32 * 7, 32 * 12, 32, 32), Vector2.Zero));
 
+      TileTransition grassToWater = new TileTransition(
+        new Sprite[] { new Sprite(atlas, new Rectangle(32 * 22, 32 * 3, 32, 32), Vector2.Zero) },
+        new Sprite[] { new Sprite(atlas, new Rectangle(32 * 22, 32 * 3, 32, 32), Vector2.Zero) },
+        new Sprite[] { new Sprite(atlas, new Rectangle(32 * 22, 32 * 3, 32, 32), Vector2.Zero) }
+      );
+
       Tile grassTile = new Tile(
         "grass",
-        5,
+        0,
         0f,
         1f,
         new Sprite(atlas, new Rectangle(32 * 22, 32 * 3, 32, 32), Vector2.Zero),
-        new Dictionary<string, NinePatchSprite>(){
-          {"water", new NinePatchSprite(atlas, new Rectangle(6 * 32, 10 * 32, 32 * 3, 32 * 3), 32, 32, 32, 32)}
-        }
+        null
         );
 
       Tile waterTile = new Tile(
         "water",
-        4,
+        1,
+        -1f,
+        0f,
+        new Sprite(atlas, new Rectangle(32 * 7, 32 * 12, 32, 32), Vector2.Zero),
+        null
+      );
+
+
+      Tile sandTile = new Tile(
+        "sand",
+        1,
         -1f,
         0f,
         new Sprite(atlas, new Rectangle(32 * 7, 32 * 12, 32, 32), Vector2.Zero),

@@ -44,7 +44,6 @@ def main(winstyle=0):
 
     pg.display.flip()
 
-    # Run our main loop whilst the player is alive.
     while True:
         # get input
         for event in pg.event.get():
@@ -75,7 +74,7 @@ def main(winstyle=0):
                 first_select_pos = (int(event.pos[0] / tilesize) * tilesize, int(event.pos[1] / tilesize) * tilesize)
             elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
                 selecting = False
-                pyperclip.copy(f"{first_select_pos[0]}, {second_select_pos[1]}, {select_width}, {select_height}")
+                pyperclip.copy(f"{first_select_pos[0]}, {first_select_pos[1]}, {select_width}, {select_height}")
 
         screen.fill([0,0,0])
         screen.blit(img, (0, 0))
@@ -86,8 +85,8 @@ def main(winstyle=0):
         screen_height = screen.get_height()
 
         if selecting:
-            second_select_pos = pg.mouse.get_pos()
-            select_second_pos = (int(second_select_pos[0] / tilesize + 1) * tilesize, int(second_select_pos[1] / tilesize + 1) * tilesize)
+            select_second_pos = pg.mouse.get_pos()
+            select_second_pos = (int(select_second_pos[0] / tilesize + 1) * tilesize, int(select_second_pos[1] / tilesize + 1) * tilesize)
             select_width = select_second_pos[0] - first_select_pos[0]
             select_height = select_second_pos[1] - first_select_pos[1]
             pg.draw.rect(screen, (255, 255, 255), pg.Rect(first_select_pos[0], first_select_pos[1], select_width, select_height))

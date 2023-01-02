@@ -2,10 +2,13 @@ import pygame as pg
 import os
 import sys
 import pyperclip
+import math
 
 SCREENRECT = pg.Rect(0, 0, 512, 512)
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
+
+def clamp(n, smallest, largest): return max(smallest, min(n, largest))
 
 def load_image(file):
     """loads an image, prepares it for play"""
@@ -21,24 +24,31 @@ def get_background(background_img : pg.Surface, screen : pg.Surface, tilesize):
     new_surf_width, new_surf_height = new_surf.get_size()
     ratio_x = screen.get_width() / new_surf_width
     ratio_y = screen.get_height() / new_surf_height
-    scale_ratio = 0
+    scale = 0
 
-    scale_ratio = ratio_y if ratio_x >= ratio_y else ratio_x
+    scale = ratio_y if ratio_x >= ratio_y else ratio_x
 
-    new_surf = pg.transform.scale(new_surf, (new_surf_width * scale_ratio, new_surf_height * scale_ratio))
+    new_surf = pg.transform.scale(new_surf, (new_surf_width * scale, new_surf_height * scale))
     new_surf_width, new_surf_height = new_surf.get_size()
 
     vertical_segments = int(background_img.get_height() / tilesize)
     horizontal_segments = int(background_img.get_width() / tilesize)
-    scaled_tilesize = tilesize * scale_ratio
+    scaled_tilesize = tilesize * scale
 
     for x in range(horizontal_segments):
         pg.draw.line(new_surf, pg.Color("white"), (x * scaled_tilesize, 0), (x * scaled_tilesize, new_surf_width))
     for y in range(vertical_segments):
         pg.draw.line(new_surf, pg.Color("white"), (0, y * scaled_tilesize), (new_surf_height, y * scaled_tilesize))
 
-    return new_surf, scaled_tilesize
-    
+    return new_surf, scaled_tilesize, scale
+
+def tile_from_screen(pos, screen_size, scale, tilesize):
+    return int((float(pos[0]) / float(screen_size[0])) * (float(screen_size[0]) / (scale * float(tilesize)))), int((float(pos[1]) / float(screen_size[1])) * (float(screen_size[1]) / (scale * float(tilesize))))
+
+def tilerect_from_screen(pos1, pos2, screen_size, scale, tilesize):
+    t1 = tile_from_screen(pos1, screen_size, scale, tilesize)
+    t2 = tile_from_screen(pos2, screen_size, scale, tilesize)
+    return t1[0], t1[1], t2[0] + 1 - t1[0], t2[1] + 1 - t1[1]
 
 def main(winstyle=0):
     pg.init()
@@ -54,10 +64,13 @@ def main(winstyle=0):
     imgpath = sys.argv[1]
     tilesize = int(sys.argv[2])
     scaled_tilesize = tilesize
+    scale = 0
 
     # Load images, assign to sprite classes
     # (do this before the classes are used, after screen setup)
     img = load_image(imgpath)
+
+    background_surf = img.copy()
 
     selecting = False
     first_select_pos = None
@@ -98,27 +111,35 @@ def main(winstyle=0):
                     pg.display.flip()
                     fullscreen = not fullscreen
             elif event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
+                event.pos = clamp(event.pos[0], 0, background_surf.get_width() - 1), clamp(event.pos[1], 0, background_surf.get_height() - 1) 
                 selecting = True
                 first_select_pos = (int(event.pos[0] / scaled_tilesize) * scaled_tilesize, int(event.pos[1] / scaled_tilesize) * scaled_tilesize)
             elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
+                event.pos = clamp(event.pos[0], 0, background_surf.get_width() - 1), clamp(event.pos[1], 0, background_surf.get_height() - 1) 
                 selecting = False
-                pyperclip.copy(f"{first_select_pos[0]}, {first_select_pos[1]}, {select_width}, {select_height}")
+                background_dirty = True
+                x, y, width, height = tilerect_from_screen(first_select_pos, event.pos, screen.get_size(), scale, tilesize)
+                print(x * tilesize, y * tilesize, width * tilesize, height * tilesize)
+                # pyperclip.copy(thing)
             elif event.type == pg.VIDEORESIZE:
                 background_dirty = True
 
         if background_dirty:
             screen.fill([0,0,0])
-            bg_surf, scaled_tilesize = get_background(img, screen, tilesize)
-            screen.blit(bg_surf, (0, 0))
+            background_surf, scaled_tilesize, scale = get_background(img, screen, tilesize)
+            screen.blit(background_surf, (0, 0))
+            pg.display.flip()
+            background_dirty = False
 
         if selecting:
+            screen.fill([0,0,0])
+            screen.blit(background_surf, (0, 0))
             select_second_pos = pg.mouse.get_pos()
             select_second_pos = (int(select_second_pos[0] / scaled_tilesize + 1) * scaled_tilesize, int(select_second_pos[1] / scaled_tilesize + 1) * scaled_tilesize)
             select_width = select_second_pos[0] - first_select_pos[0]
             select_height = select_second_pos[1] - first_select_pos[1]
             pg.draw.rect(screen, (255, 255, 255), pg.Rect(first_select_pos[0], first_select_pos[1], select_width, select_height))
-
-        pg.display.flip()
+            pg.display.flip()
 
         # cap the framerate at 40fps. Also called 40HZ or 40 times per second.
         clock.tick(40)

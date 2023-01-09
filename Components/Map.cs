@@ -42,6 +42,10 @@ namespace NewProject
 
     public Tile GetTile(int x, int y)
     {
+      if (x < 0 || x >= Width || y < 0 || y >= Width)
+      {
+        return null;
+      }
       float value = RawValues[x, y];
       foreach (Tile tile in Tiles)
       {

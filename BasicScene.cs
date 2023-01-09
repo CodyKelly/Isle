@@ -40,7 +40,7 @@ namespace NewProject
       Tile grassTile = new Tile(
         "grass",
         0,
-        0f,
+        .15f,
         1f,
         new Sprite(atlas, new Rectangle(32 * 22, 32 * 3, 32, 32), Vector2.Zero),
         null
@@ -50,7 +50,7 @@ namespace NewProject
         "water",
         1,
         -1f,
-        0f,
+        -.15f,
         new Sprite(atlas, new Rectangle(32 * 7, 32 * 12, 32, 32), Vector2.Zero),
         null
       );
@@ -59,15 +59,15 @@ namespace NewProject
       Tile sandTile = new Tile(
         "sand",
         1,
-        -1f,
-        0f,
-        new Sprite(atlas, new Rectangle(32 * 7, 32 * 12, 32, 32), Vector2.Zero),
+        -.15f,
+        .15f,
+        new Sprite(atlas, new Rectangle(128, 384, 32, 32), Vector2.Zero),
         null
       );
 
 
       var mapEntity = CreateEntity("Map");
-      var map = mapEntity.AddComponent(new Map(500, 500, new Tile[] { waterTile, grassTile }));
+      var map = mapEntity.AddComponent(new Map(500, 500, new Tile[] { waterTile, grassTile, sandTile }));
       map.Generate();
       mapEntity.Scale = Vector2.One * 2f;
       var mapRenderer = mapEntity.AddComponent(new MapRenderer(map));

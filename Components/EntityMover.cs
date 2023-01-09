@@ -25,7 +25,8 @@ namespace NewProject
     public void Update()
     {
       float calcSpeed = speed;
-      bool inWater = _map.GetTileAtWorldPos(Entity.Position.X, Entity.Position.Y).Name == "water";
+      Tile currentTile = _map.GetTileAtWorldPos(Entity.Position.X, Entity.Position.Y);
+      bool inWater = currentTile == null ? false : currentTile.Name == "water";
       if (inWater)
       {
         calcSpeed /= 3f;

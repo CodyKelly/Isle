@@ -40,7 +40,7 @@ namespace NewProject
       Tile grassTile = new Tile(
         "grass",
         0,
-        .15f,
+        .015f,
         1f,
         new Sprite(atlas, new Rectangle(32 * 22, 32 * 3, 32, 32), Vector2.Zero),
         null
@@ -50,7 +50,7 @@ namespace NewProject
         "water",
         1,
         -1f,
-        -.15f,
+        -.015f,
         new Sprite(atlas, new Rectangle(32 * 7, 32 * 12, 32, 32), Vector2.Zero),
         null
       );
@@ -59,8 +59,8 @@ namespace NewProject
       Tile sandTile = new Tile(
         "sand",
         1,
-        -.15f,
-        .15f,
+        -.015f,
+        .015f,
         new Sprite(atlas, new Rectangle(128, 384, 32, 32), Vector2.Zero),
         null
       );

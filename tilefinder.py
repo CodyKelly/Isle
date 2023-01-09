@@ -38,8 +38,9 @@ def get_background(background_img : pg.Surface, screen : pg.Surface, tilesize):
     for x in range(horizontal_segments):
         pg.draw.line(new_surf, pg.Color("white"), (x * scaled_tilesize, 0), (x * scaled_tilesize, new_surf_width))
     for y in range(vertical_segments):
-        pg.draw.line(new_surf, pg.Color("white"), (0, y * scaled_tilesize), (new_surf_height, y * scaled_tilesize))
-
+        pg.draw.line(new_surf, pg.Color("white"), (0, y * scaled_tilesize), (new_surf_width, y * scaled_tilesize))
+    pg.draw.line(new_surf, pg.Color("white"), (new_surf_width - 1, 0), (new_surf_width - 1, new_surf_width))
+    pg.draw.line(new_surf, pg.Color("white"), (0, new_surf_height - 1), (new_surf_width, new_surf_height - 1))
     return new_surf, scaled_tilesize, scale
 
 def tile_from_screen(pos, screen_size, scale, tilesize):

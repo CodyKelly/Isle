@@ -119,8 +119,9 @@ def main(winstyle=0):
                 selecting = False
                 background_dirty = True
                 x, y, width, height = tilerect_from_screen(first_select_pos, event.pos, screen.get_size(), scale, tilesize)
-                print(x * tilesize, y * tilesize, width * tilesize, height * tilesize)
-                # pyperclip.copy(thing)
+                tileinfo = x * tilesize, y * tilesize, width * tilesize, height * tilesize
+                print(tileinfo)
+                pyperclip.copy(str(tileinfo))
             elif event.type == pg.VIDEORESIZE:
                 background_dirty = True
 

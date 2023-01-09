@@ -4,7 +4,7 @@ import sys
 import pyperclip
 import math
 
-SCREENRECT = pg.Rect(0, 0, 512, 512)
+SCREENRECT = pg.Rect(0, 0, 1024, 1024)
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 
@@ -119,9 +119,9 @@ def main(winstyle=0):
                 selecting = False
                 background_dirty = True
                 x, y, width, height = tilerect_from_screen(first_select_pos, event.pos, screen.get_size(), scale, tilesize)
-                tileinfo = x * tilesize, y * tilesize, width * tilesize, height * tilesize
+                tileinfo = f"{x * tilesize}, {y * tilesize}, {width * tilesize}, {height * tilesize}"
                 print(tileinfo)
-                pyperclip.copy(str(tileinfo))
+                pyperclip.copy(tileinfo)
             elif event.type == pg.VIDEORESIZE:
                 background_dirty = True
 

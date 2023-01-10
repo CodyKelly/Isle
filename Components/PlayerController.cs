@@ -17,7 +17,7 @@ namespace NewProject
     EntityMover _mover;
     Map _map;
 
-    float fireRate = .015f;
+    float fireRate = .25f;
     float lastFire = 0;
     bool firing = false;
     float fireSpawnDistance = 80f;

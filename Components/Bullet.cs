@@ -1,0 +1,6 @@
+using Nez;
+
+namespace NewProject
+{
+
+}

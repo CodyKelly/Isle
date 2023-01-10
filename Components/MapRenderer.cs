@@ -47,8 +47,10 @@ namespace NewProject
           //     count++;
           //   }
           // }
-          Sprite tileSprite = Map.GetTile(x, y).Sprite; //getSprite(tileBlock);
-          batcher.Draw(tileSprite, new Vector2(x * 32 * Transform.Scale.X, y * 32 * Transform.Scale.Y), Color.White, 0f, Vector2.Zero, Transform.Scale, SpriteEffects.None, LayerDepth);
+          Tile tile = Map.GetTile(x, y);
+          float range = tile.EndRange - tile.StartRange;
+          float tileValue = Mathf.Map(Map.RawValues[x, y], tile.StartRange, tile.EndRange, Math.Max(0.6f, 1f - range), 1f);
+          batcher.Draw(tile.Sprite, new Vector2(x * 32 * Transform.Scale.X, y * 32 * Transform.Scale.Y), Color.White * tileValue, 0f, Vector2.Zero, Transform.Scale, SpriteEffects.None, LayerDepth);
           // batcher.DrawLine(new Vector2(x * Map.TileSize * Transform.Scale.X, 0), new Vector2(x * Map.TileSize * Transform.Scale.X, Map.Height * Map.TileSize * Transform.Scale.Y), Color.Yellow, 5f);
         }
         // batcher.DrawLine(new Vector2(0, y * Map.TileSize * Transform.Scale.Y), new Vector2(Map.Width * Map.TileSize * Transform.Scale.X, y * Map.TileSize * Transform.Scale.Y), Color.Yellow, 5f);

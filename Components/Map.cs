@@ -15,6 +15,9 @@ namespace NewProject
     public int Width { get; }
     public int Height { get; }
 
+    public float WorldWidth { get { return (float)Width * (float)TileSize * Scale; } }
+    public float WorldHeight { get { return (float)Height * (float)TileSize * Scale; } }
+
     public Tile[] Tiles { get; }
 
     public int TileSize { get; } = 32;

@@ -1,6 +1,6 @@
 using Nez;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Graphics;
 using Nez.Sprites;
 using Nez.Textures;
 using Nez.ImGuiTools;
@@ -10,21 +10,30 @@ namespace NewProject
   class EntityMover : Component, IUpdatable
   {
     [Inspectable]
-    float speed = 750f;
+    public float Speed { get; set; } = 750f;
 
     Mover _mover;
     SpriteAnimator _animator;
     BoxCollider _boxCollider;
     SubpixelVector2 _subpixelV2 = new SubpixelVector2();
     Map _map;
+    Texture2D _upAtlas, _downAtlas, _sideAtlas;
 
-    public EntityMover(Map map) => _map = map;
+    public float AnimFramerate { get; set; } = 4f;
+
+    public EntityMover(Map map, Texture2D upAtlas, Texture2D downAtlas, Texture2D sideAtlas)
+    {
+      _map = map;
+      _upAtlas = upAtlas;
+      _downAtlas = downAtlas;
+      _sideAtlas = sideAtlas;
+    }
 
     public Vector2 MoveDir { get; set; } = Vector2.Zero;
 
     public void Update()
     {
-      float calcSpeed = speed;
+      float calcSpeed = Speed;
       Tile currentTile = _map.GetTileAtWorldPos(Entity.Position.X, Entity.Position.Y);
       bool inWater = currentTile == null ? false : currentTile.Name == "water";
       if (inWater)
@@ -79,13 +88,9 @@ namespace NewProject
 
     void SetupAnimations()
     {
-      float animFramerate = 4f;
-      var downAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Armorlancer.Armorlancerdownpng);
-      var sideAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Armorlancer.Armorlancersidepng);
-      var upAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Armorlancer.Armorlanceruppng);
-      _animator.AddAnimation("right", new SpriteAnimation(Sprite.SpritesFromAtlas(sideAtlas, 16, 16).ToArray(), animFramerate));
-      _animator.AddAnimation("down", new SpriteAnimation(Sprite.SpritesFromAtlas(downAtlas, 16, 16).ToArray(), animFramerate));
-      _animator.AddAnimation("up", new SpriteAnimation(Sprite.SpritesFromAtlas(upAtlas, 16, 16).ToArray(), animFramerate));
+      _animator.AddAnimation("right", new SpriteAnimation(Sprite.SpritesFromAtlas(_sideAtlas, 16, 16).ToArray(), AnimFramerate));
+      _animator.AddAnimation("down", new SpriteAnimation(Sprite.SpritesFromAtlas(_downAtlas, 16, 16).ToArray(), AnimFramerate));
+      _animator.AddAnimation("up", new SpriteAnimation(Sprite.SpritesFromAtlas(_upAtlas, 16, 16).ToArray(), AnimFramerate));
       _animator.Play("down");
     }
   }

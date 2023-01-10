@@ -27,7 +27,10 @@ namespace NewProject
     public override void OnAddedToEntity()
     {
       Entity.Scale = Vector2.One * 3f;
-      _mover = Entity.AddComponent(new EntityMover(_map));
+      var downAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Armorlancer.Armorlancerdownpng);
+      var sideAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Armorlancer.Armorlancersidepng);
+      var upAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Armorlancer.Armorlanceruppng);
+      _mover = Entity.AddComponent(new EntityMover(_map, upAtlas, downAtlas, sideAtlas));
       SetupInput();
     }
 

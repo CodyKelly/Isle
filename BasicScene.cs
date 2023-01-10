@@ -98,14 +98,14 @@ namespace NewProject
       Camera.MinimumZoom = .05f;
       Camera.MaximumZoom = 1.5f;
       Camera.Zoom = -1f;
-      Camera.AddComponent(new SelectionManager().SetRenderLayer(RenderLayers.SCREEN_SPACE_LAYER));
+      // Camera.AddComponent(new SelectionManager().SetRenderLayer(RenderLayers.SCREEN_SPACE_LAYER));
 
       CreateMobs(map);
     }
 
     private void CreateMobs(Map map)
     {
-      int numMobs = 300;
+      int numMobs = 3000;
       for (int i = 0; i < numMobs; i++)
       {
         var newBat = CreateEntity("bat " + (i + 1).ToString());

@@ -22,7 +22,15 @@ namespace NewProject
     {
       var currentTime = Time.TotalTime;
 
-
+      var pos = Entity.Position;
+      if (pos.X < 0 || pos.X > _map.WorldWidth)
+      {
+        _mover.MoveDir = new Vector2(-_mover.MoveDir.X, _mover.MoveDir.Y);
+      }
+      if (pos.Y < 0 || pos.Y > _map.WorldHeight)
+      {
+        _mover.MoveDir = new Vector2(_mover.MoveDir.X, -_mover.MoveDir.Y);
+      }
       if (currentTime - lastTurn > turnTimer)
       {
         lastTurn = currentTime;

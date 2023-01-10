@@ -200,6 +200,7 @@ namespace Nez
 
 			}
 
+			public const string Bulletpng = @"../Content/Textures/bullet.png";
 			public const string DVD_logopng = @"../Content/Textures/DVD_logo.png";
 			public const string Groundpng = @"../Content/Textures/ground.png";
 			public const string Terrain_atlaspng = @"../Content/Textures/terrain_atlas.png";

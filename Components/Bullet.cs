@@ -7,7 +7,7 @@ namespace NewProject
   class Bullet : Component, IUpdatable
   {
     public Vector2 Vector { get; }
-    public float Speed { get; set; } = 1200f;
+    public float Speed { get; set; } = 3000f;
 
     Mover _mover;
     SubpixelVector2 _subpixelV2 = new SubpixelVector2();

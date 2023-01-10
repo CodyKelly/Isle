@@ -85,6 +85,7 @@ namespace NewProject
       // decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
       var player = CreateEntity("player", new Vector2(Screen.Width / 2, Screen.Height / 2));
       player.AddComponent(new PlayerController(map));
+      player.SetPosition(map.TileToWorldPosition(map.HighestPoint));
 
       // CreateTrees(decorations.ToArray());
 
@@ -105,7 +106,7 @@ namespace NewProject
 
     private void CreateMobs(Map map)
     {
-      int numMobs = 3000;
+      int numMobs = 500;
       for (int i = 0; i < numMobs; i++)
       {
         var newBat = CreateEntity("bat " + (i + 1).ToString());

@@ -15,21 +15,27 @@ namespace NewProject
     public int Width { get; }
     public int Height { get; }
 
-    public float WorldWidth { get { return (float)Width * (float)TileSize * Scale; } }
-    public float WorldHeight { get { return (float)Height * (float)TileSize * Scale; } }
+    public float WorldWidth { get { return worldWidth.HasValue ? worldWidth.Value : (worldWidth = (float?)((float)Width * (float)TileSize * Entity.Scale.X)).Value; } }
+    public float WorldHeight { get { return worldHeight.HasValue ? worldHeight.Value : (worldHeight = (float?)((float)Height * (float)TileSize * Entity.Scale.Y)).Value; } }
+    float? worldWidth;
+    float? worldHeight;
 
     public Tile[] Tiles { get; }
 
     public int TileSize { get; } = 32;
 
+    public Point HighestPoint { get { return highestPoint; } }
+    private Point highestPoint = new Point();
+
     public float[,] RawValues { get; set; }
 
-    public float Scale { get; set; } = 1f;
+    public float NoiseScale { get; set; } = 1f;
 
     private FastNoiseLite _noise = new FastNoiseLite();
 
     public void Generate()
     {
+      float highestPointValue = -1f;
       _noise.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
       // _noise.SetFrequency(0.1f);
       _noise.SetSeed(Random.NextInt(1000000));
@@ -38,7 +44,14 @@ namespace NewProject
       {
         for (int x = 0; x < Width; x++)
         {
-          RawValues[x, y] = _noise.GetNoise(x * Scale, y * Scale);
+          float value = _noise.GetNoise(x * NoiseScale, y * NoiseScale);
+          RawValues[x, y] = value;
+          if (value > highestPointValue)
+          {
+            highestPointValue = value;
+            highestPoint.X = x;
+            highestPoint.Y = y;
+          }
         }
       }
     }
@@ -62,6 +75,7 @@ namespace NewProject
 
     public int WorldToTilePositionX(float x) => (int)(x / TileSize / Entity.Scale.X);
     public int WorldToTilePositionY(float y) => (int)(y / TileSize / Entity.Scale.Y);
+    public Vector2 TileToWorldPosition(Point p) => new Vector2(p.X * TileSize * Entity.Scale.X, p.Y * TileSize * Entity.Scale.Y);
     public Tile GetTileAtWorldPos(float x, float y) => GetTile(WorldToTilePositionX(x), WorldToTilePositionY(y));
   }
 }

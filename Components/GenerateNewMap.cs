@@ -10,6 +10,7 @@ namespace NewProject
     {
       if (Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.G))
       {
+        _map.Seed = Random.NextInt(10000000);
         _map.Generate();
       }
     }

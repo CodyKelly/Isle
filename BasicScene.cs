@@ -40,7 +40,7 @@ namespace NewProject
       Tile grassTile = new Tile(
         "grass",
         0,
-        .015f,
+        .55f,
         1f,
         new Sprite(atlas, new Rectangle(32 * 22, 32 * 3, 32, 32), Vector2.Zero),
         null
@@ -49,8 +49,8 @@ namespace NewProject
       Tile waterTile = new Tile(
         "water",
         1,
-        -1f,
-        -.015f,
+        0f,
+        .45f,
         new Sprite(atlas, new Rectangle(32 * 7, 32 * 12, 32, 32), Vector2.Zero),
         null
       );
@@ -59,15 +59,15 @@ namespace NewProject
       Tile sandTile = new Tile(
         "sand",
         1,
-        -.015f,
-        .015f,
+        .45f,
+        .55f,
         new Sprite(atlas, new Rectangle(128, 384, 32, 32), Vector2.Zero),
         null
       );
 
 
       var mapEntity = CreateEntity("Map");
-      var map = mapEntity.AddComponent(new Map(500, 500, new Tile[] { waterTile, grassTile, sandTile }));
+      var map = mapEntity.AddComponent(new Map(600, 600, new Tile[] { waterTile, grassTile, sandTile }));
       map.Generate();
       mapEntity.Scale = Vector2.One * 2f;
       var mapRenderer = mapEntity.AddComponent(new MapRenderer(map));
@@ -83,16 +83,16 @@ namespace NewProject
       decorations.Add(new Sprite(atlas, new Rectangle(32 * 1, 1024 - 32, 32 * 1, 32 * 1), Vector2.Zero));
       // decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
       // decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
-      var player = CreateEntity("player", new Vector2(Screen.Width / 2, Screen.Height / 2));
-      player.AddComponent(new PlayerController(map));
-      player.SetPosition(map.TileToWorldPosition(map.HighestPoint));
+      // var player = CreateEntity("player", new Vector2(Screen.Width / 2, Screen.Height / 2));
+      // player.AddComponent(new PlayerController(map));
+      // player.SetPosition(map.TileToWorldPosition(map.HighestPoint));
 
       // CreateTrees(decorations.ToArray());
 
-      var followCamera = new FollowCamera(player);
-      followCamera.FollowLerp = 0.08f;
-      Camera.Entity.AddComponent(followCamera);
-      // Camera.Entity.AddComponent(new CameraController());
+      // var followCamera = new FollowCamera(player);
+      // followCamera.FollowLerp = 0.08f;
+      // Camera.Entity.AddComponent(followCamera);
+      Camera.Entity.AddComponent(new CameraController());
       Camera.Entity.AddComponent(new ScrollZoom(Camera));
       Camera.Entity.AddComponent(new GenerateNewMap(map));
       Camera.Entity.UpdateOrder = int.MaxValue;
@@ -101,7 +101,7 @@ namespace NewProject
       Camera.Zoom = -1f;
       // Camera.AddComponent(new SelectionManager().SetRenderLayer(RenderLayers.SCREEN_SPACE_LAYER));
 
-      CreateMobs(map);
+      // CreateMobs(map);
     }
 
     private void CreateMobs(Map map)

@@ -29,22 +29,42 @@ namespace NewProject
 
     public float[,] RawValues { get; set; }
 
-    public float NoiseScale { get; set; } = 1f;
+    public int Octaves { get; set; } = 10;
+    public int Seed { get; set; }
 
     private FastNoiseLite _noise = new FastNoiseLite();
+
+    public override void OnAddedToEntity()
+    {
+      Seed = Random.NextInt(1000000);
+    }
 
     public void Generate()
     {
       float highestPointValue = -1f;
       _noise.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
       // _noise.SetFrequency(0.1f);
-      _noise.SetSeed(Random.NextInt(1000000));
+      _noise.SetSeed(Seed);
+      float sqrt2 = Mathf.Sqrt(2);
       RawValues = new float[Width, Height];
       for (int y = 0; y < Height; y++)
       {
         for (int x = 0; x < Width; x++)
         {
-          float value = _noise.GetNoise(x * NoiseScale, y * NoiseScale);
+          float nx = 2f * (float)x / (float)Width - 1f;
+          float ny = 2f * (float)y / (float)Height - 1f;
+          float dist = MathHelper.Min(1f, (nx * nx + ny * ny) / sqrt2);
+          float value = 0;
+          float multiplierSum = 0;
+          for (int i = 1; i <= Octaves; i++)
+          {
+            float multiplier = 1f / (float)i;
+            multiplierSum += multiplier;
+            _noise.SetSeed(Seed + i);
+            value += multiplier * ((_noise.GetNoise((float)x * (float)i, (float)y * (float)i)) + 1) / 2f;
+          }
+          value /= multiplierSum;
+          value = MathHelper.Max(0f, (value - (-Mathf.Cos(dist * MathHelper.TwoPi) + 1) / 2));
           RawValues[x, y] = value;
           if (value > highestPointValue)
           {
@@ -58,7 +78,7 @@ namespace NewProject
 
     public Tile GetTile(int x, int y)
     {
-      if (x < 0 || x >= Width || y < 0 || y >= Width)
+      if (x < 0 || x >= Width || y < 0 || y >= Height)
       {
         return null;
       }

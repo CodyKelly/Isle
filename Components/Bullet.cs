@@ -34,13 +34,23 @@ namespace NewProject
     {
       Vector2 movement = Vector * Speed * Time.DeltaTime;
       _subpixelV2.Update(ref movement);
-      _mover.ApplyMovement(movement);
 
-      if (_collider.CollidesWithAny(out CollisionResult result) && result.Collider.Entity.Name != "bullet")
+      var pos = Entity.Position;
+      var result = Physics.Linecast(pos, pos + movement);
+      if (result.Collider != null)
       {
         result.Collider.Entity.Destroy();
         Entity.Destroy();
       }
+      else
+      {
+        Entity.SetPosition(pos + movement);
+      }
+
+      // if (_mover.Move(movement, out CollisionResult result) && result.Collider.Entity.Name != "bullet")
+      // {
+
+      // }
 
       float currentTime = Time.TotalTime;
       if (currentTime - spawnTime > liveTime)

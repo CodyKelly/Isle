@@ -38,7 +38,7 @@ namespace NewProject
       bool inWater = currentTile == null ? false : currentTile.Name == "water";
       if (inWater)
       {
-        calcSpeed /= 3f;
+        calcSpeed /= 1f;
       }
 
       if (MoveDir != Vector2.Zero)
@@ -69,7 +69,7 @@ namespace NewProject
         var bounds = _boxCollider.Bounds;
         _animator.SetRenderLayer(-(int)bounds.Bottom - (int)(bounds.Height / 2f));
         _subpixelV2.Update(ref movement);
-        _mover.ApplyMovement(movement);
+        _mover.Move(movement, out _);
       }
       else
       {

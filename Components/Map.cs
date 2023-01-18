@@ -28,6 +28,7 @@ namespace NewProject
     private Point highestPoint = new Point();
 
     public float[,] RawValues { get; set; }
+    public int[,] TileValues { get; set; }
 
     public int Octaves { get; set; } = 10;
     public int Seed { get; set; }
@@ -47,6 +48,7 @@ namespace NewProject
       _noise.SetSeed(Seed);
       float sqrt2 = Mathf.Sqrt(2);
       RawValues = new float[Width, Height];
+      TileValues = new int[Width, Height];
       for (int y = 0; y < Height; y++)
       {
         for (int x = 0; x < Width; x++)
@@ -66,6 +68,13 @@ namespace NewProject
           value /= multiplierSum;
           value = MathHelper.Max(0f, (value - (-Mathf.Cos(dist * MathHelper.TwoPi) + 1) / 2));
           RawValues[x, y] = value;
+          for (int i = 0; i < Tiles.Length; i++)
+          {
+            if (value >= Tiles[i].StartRange && value < Tiles[i].EndRange)
+            {
+              TileValues[x, y] = i;
+            }
+          }
           if (value > highestPointValue)
           {
             highestPointValue = value;

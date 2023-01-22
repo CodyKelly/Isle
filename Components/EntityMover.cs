@@ -36,9 +36,9 @@ namespace NewProject
       float calcSpeed = Speed;
       Tile currentTile = _map.GetTileAtWorldPos(Entity.Position.X, Entity.Position.Y);
       bool inWater = currentTile == null ? false : currentTile.Name == "water";
-      if (inWater)
+      if (inWater && Entity.Name == "player")
       {
-        calcSpeed /= 1f;
+        calcSpeed /= 2f;
       }
 
       if (MoveDir != Vector2.Zero)

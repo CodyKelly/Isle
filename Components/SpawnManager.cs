@@ -2,11 +2,8 @@ using Nez;
 
 namespace NewProject
 {
-  class SpawnManager : Component, IUpdatable
+  class SpawnManager : Component
   {
-    public void Update()
-    {
-      
-    }
+
   }
 }

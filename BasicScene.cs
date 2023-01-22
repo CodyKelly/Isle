@@ -11,6 +11,7 @@ namespace NewProject
 {
   class BasicScene : Scene
   {
+    public Map Map { get; private set; }
     public override void Initialize()
     {
       base.Initialize();
@@ -67,10 +68,10 @@ namespace NewProject
 
 
       var mapEntity = CreateEntity("Map");
-      var map = mapEntity.AddComponent(new Map(600, 600, new Tile[] { waterTile, grassTile, sandTile }));
-      map.Generate();
+      Map = mapEntity.AddComponent(new Map(1000, 1000, new Tile[] { waterTile, grassTile, sandTile }));
+      Map.Generate();
       mapEntity.Scale = Vector2.One * 2f;
-      var mapRenderer = mapEntity.AddComponent(new MapRenderer(map));
+      var mapRenderer = mapEntity.AddComponent(new MapRenderer(Map));
       mapEntity.AddComponent(new CameraBounds(mapRenderer.Bounds));
       mapRenderer.RenderLayer = int.MaxValue;
 
@@ -83,35 +84,34 @@ namespace NewProject
       decorations.Add(new Sprite(atlas, new Rectangle(32 * 1, 1024 - 32, 32 * 1, 32 * 1), Vector2.Zero));
       // decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
       // decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
-      // var player = CreateEntity("player", new Vector2(Screen.Width / 2, Screen.Height / 2));
-      // player.AddComponent(new PlayerController(map));
-      // player.SetPosition(map.TileToWorldPosition(map.HighestPoint));
+      var player = CreateEntity("player", new Vector2(Screen.Width / 2, Screen.Height / 2));
+      player.AddComponent(new PlayerController(Map));
+      player.SetPosition(Map.TileToWorldPosition(Map.HighestPoint));
 
       // CreateTrees(decorations.ToArray());
 
-      // var followCamera = new FollowCamera(player);
-      // followCamera.FollowLerp = 0.08f;
-      // Camera.Entity.AddComponent(followCamera);
-      Camera.Entity.AddComponent(new CameraController());
+      var followCamera = new FollowCamera(player);
+      followCamera.FollowLerp = 0.08f;
+      Camera.Entity.AddComponent(followCamera);
+      // Camera.Entity.AddComponent(new CameraController());
       Camera.Entity.AddComponent(new ScrollZoom(Camera));
-      Camera.Entity.AddComponent(new GenerateNewMap(map));
+      Camera.Entity.AddComponent(new GenerateNewMap(Map));
       Camera.Entity.UpdateOrder = int.MaxValue;
       Camera.MinimumZoom = .05f;
       Camera.MaximumZoom = 1.5f;
       Camera.Zoom = -1f;
       // Camera.AddComponent(new SelectionManager().SetRenderLayer(RenderLayers.SCREEN_SPACE_LAYER));
 
-      // CreateMobs(map);
+      CreateMobs(Map);
     }
 
     private void CreateMobs(Map map)
     {
-      int numMobs = 500;
+      int numMobs = 800;
       for (int i = 0; i < numMobs; i++)
       {
-        var newBat = CreateEntity("bat " + (i + 1).ToString());
-        newBat.SetPosition(new Vector2(Random.NextFloat() * map.WorldWidth, Random.NextFloat() * map.WorldHeight));
-        newBat.AddComponent(new BatController(map));
+        var newBat = AddEntity<BatEntity>(Pool<BatEntity>.Obtain());
+        newBat.SetEnabled(true);
       }
     }
 

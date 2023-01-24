@@ -84,16 +84,15 @@ namespace NewProject
       decorations.Add(new Sprite(atlas, new Rectangle(32 * 1, 1024 - 32, 32 * 1, 32 * 1), Vector2.Zero));
       // decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
       // decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
-      var player = CreateEntity("player", new Vector2(Screen.Width / 2, Screen.Height / 2));
-      player.AddComponent(new PlayerController(Map));
-      player.SetPosition(Map.TileToWorldPosition(Map.HighestPoint));
+
+
 
       // CreateTrees(decorations.ToArray());
-
-      var followCamera = new FollowCamera(player);
-      followCamera.FollowLerp = 0.08f;
-      Camera.Entity.AddComponent(followCamera);
-      // Camera.Entity.AddComponent(new CameraController());
+      // var player = AddEntity(new PlayerEntity());
+      // var followCamera = new FollowCamera(player);
+      // followCamera.FollowLerp = 0.08f;
+      // Camera.Entity.AddComponent(followCamera);
+      Camera.Entity.AddComponent(new CameraController());
       Camera.Entity.AddComponent(new ScrollZoom(Camera));
       Camera.Entity.AddComponent(new GenerateNewMap(Map));
       Camera.Entity.UpdateOrder = int.MaxValue;

@@ -7,13 +7,12 @@ using Nez.ImGuiTools;
 
 namespace NewProject
 {
-  class PlayerController : Component, IUpdatable
+  class PlayerController : Controller
   {
 
     VirtualButton _fireInput;
     VirtualAxis _xAxisInput;
     VirtualAxis _yAxisInput;
-    EntityMover _mover;
     Map _map;
 
     float fireRate = .25f;
@@ -23,13 +22,19 @@ namespace NewProject
 
     public PlayerController(Map map) => _map = map;
 
-    public void Update()
+    public override void Update()
     {
+      float calcSpeed = Speed;
+      Tile currentTile = _map.GetTileAtWorldPos(Entity.Position.X, Entity.Position.Y);
+      bool inWater = currentTile == null ? false : currentTile.Name == "water";
+      if (inWater)
+      {
+        calcSpeed /= 2f;
+      }
+
+      Vector2 MoveDir = new Vector2(_xAxisInput.Value, _yAxisInput.Value);
+
       float currentTime = Time.TotalTime;
-      Vector2 moveDir = new Vector2(_xAxisInput.Value, _yAxisInput.Value);
-
-      _mover.MoveDir = moveDir;
-
       if (Input.LeftMouseButtonPressed) { firing = true; }
       else if (Input.LeftMouseButtonReleased) firing = false;
 
@@ -45,6 +50,8 @@ namespace NewProject
         newBullet.SetEnabled(true);
         Entity.Scene.AddEntity(newBullet);
       }
+
+      base.Update();
     }
 
     public override void OnAddedToEntity()
@@ -53,7 +60,6 @@ namespace NewProject
       var downAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Armorlancer.Armorlancerdownpng);
       var sideAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Armorlancer.Armorlancersidepng);
       var upAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Armorlancer.Armorlanceruppng);
-      _mover = Entity.AddComponent(new EntityMover(_map, upAtlas, downAtlas, sideAtlas));
       SetupInput();
     }
 

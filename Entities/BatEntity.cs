@@ -11,9 +11,8 @@ namespace NewProject
     public override void OnAddedToScene()
     {
       base.OnAddedToScene();
-      var map = ((BasicScene)Scene).Map;
 
-      AddComponent(new BatController(((BasicScene)Scene).Map));
+      AddComponent(new BatController());
       _health = AddComponent(new Health());
 
       Reset();

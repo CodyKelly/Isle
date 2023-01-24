@@ -7,49 +7,54 @@ using Nez.ImGuiTools;
 
 namespace NewProject
 {
-  class BatController : Component, IUpdatable
+  class BatController : AnimatedController
   {
-    EntityMover _mover;
-    Map _map;
-
     float turnTimer = 0f;
     float lastTurn = 0f;
     float maxTurnTime = 10;
 
-    public BatController(Map map) => _map = map;
-
-    public void Update()
+    public override void Update()
     {
+      base.Update();
+
       var currentTime = Time.TotalTime;
 
       var pos = Entity.Position;
       if (pos.X < 0 || pos.X > _map.WorldWidth)
       {
-        _mover.MoveDir = new Vector2(-_mover.MoveDir.X, _mover.MoveDir.Y);
+        MoveDir = new Vector2(-MoveDir.X, MoveDir.Y);
       }
       if (pos.Y < 0 || pos.Y > _map.WorldHeight)
       {
-        _mover.MoveDir = new Vector2(_mover.MoveDir.X, -_mover.MoveDir.Y);
+        MoveDir = new Vector2(MoveDir.X, -MoveDir.Y);
       }
       if (currentTime - lastTurn > turnTimer)
       {
         lastTurn = currentTime;
         turnTimer = Random.NextFloat(maxTurnTime);
-        _mover.MoveDir = Random.NextUnitVector();
+        MoveDir = Random.NextUnitVector();
       }
     }
 
     public override void OnAddedToEntity()
     {
-      Entity.Scale = Vector2.One * 3f;
-      var downAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Bat.Batpng);
-      var sideAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Bat.Batpng);
-      var upAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Bat.Batpng);
-      _mover = Entity.AddComponent(new EntityMover(_map, upAtlas, downAtlas, sideAtlas));
-      _mover.Speed = 850;
-      _mover.AnimFramerate = 8f;
+      _collider = Entity.AddComponent<BoxCollider>();
+      base.OnAddedToEntity();
+      MaxSpeed = 850;
+      _framerate = 8f;
       turnTimer = Random.NextFloat(maxTurnTime);
-      _mover.MoveDir = Random.NextUnitVector();
+      MoveDir = Random.NextUnitVector();
+      _map = ((BasicScene)Entity.Scene).Map;
+    }
+
+    protected override void LoadTextures()
+    {
+      if (_upAtlas == null)
+      {
+        _downAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Bat.Batpng);
+        _sideAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Bat.Batpng);
+        _upAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Bat.Batpng);
+      }
     }
   }
 }

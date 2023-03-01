@@ -1,38 +1,35 @@
 using Nez;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Nez.Sprites;
-using Nez.Textures;
-using Nez.ImGuiTools;
 
 namespace NewProject
 {
-  class PlayerController : Controller
+  class PlayerController : Controller, IUpdatable
   {
 
     VirtualButton _fireInput;
     VirtualAxis _xAxisInput;
     VirtualAxis _yAxisInput;
     Map _map;
+    Mover _mover;
 
-    float fireRate = .25f;
+    float fireRate = .05f;
     float lastFire = 0;
     bool firing = false;
     float fireSpawnDistance = 80f;
 
-    public PlayerController(Map map) => _map = map;
-
-    public override void Update()
+    public void Update()
     {
-      float calcSpeed = Speed;
+      Speed = MaxSpeed;
       Tile currentTile = _map.GetTileAtWorldPos(Entity.Position.X, Entity.Position.Y);
       bool inWater = currentTile == null ? false : currentTile.Name == "water";
       if (inWater)
       {
-        calcSpeed /= 2f;
+        Speed /= 2f;
       }
 
-      Vector2 MoveDir = new Vector2(_xAxisInput.Value, _yAxisInput.Value);
+      MoveDir = new Vector2(_xAxisInput.Value, _yAxisInput.Value) * Speed * Time.DeltaTime;
+      _mover.Move(MoveDir, out var res);
 
       float currentTime = Time.TotalTime;
       if (Input.LeftMouseButtonPressed) { firing = true; }
@@ -50,17 +47,16 @@ namespace NewProject
         newBullet.SetEnabled(true);
         Entity.Scene.AddEntity(newBullet);
       }
-
-      base.Update();
     }
 
     public override void OnAddedToEntity()
     {
       Entity.Scale = Vector2.One * 3f;
-      var downAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Armorlancer.Armorlancerdownpng);
-      var sideAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Armorlancer.Armorlancersidepng);
-      var upAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Armorlancer.Armorlanceruppng);
+      MaxSpeed = 500f;
+      _map = ((BasicScene)Entity.Scene).Map;
+      _mover = Entity.AddComponent<Mover>();
       SetupInput();
+      base.OnAddedToEntity();
     }
 
     void SetupInput()

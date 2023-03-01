@@ -85,16 +85,16 @@ namespace NewProject
       // decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
       // decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
 
-
-
       // CreateTrees(decorations.ToArray());
-      // var player = AddEntity(new PlayerEntity());
-      // var followCamera = new FollowCamera(player);
-      // followCamera.FollowLerp = 0.08f;
-      // Camera.Entity.AddComponent(followCamera);
-      Camera.Entity.AddComponent(new CameraController());
+
+      var player = AddEntity(new PlayerEntity());
+      var followCamera = new FollowCamera(player);
+      Camera.Entity.AddComponent(followCamera);
+
+      // Camera.Entity.AddComponent(new CameraController());
+
       Camera.Entity.AddComponent(new ScrollZoom(Camera));
-      Camera.Entity.AddComponent(new GenerateNewMap(Map));
+      // Camera.Entity.AddComponent(new GenerateNewMap(Map));
       Camera.Entity.UpdateOrder = int.MaxValue;
       Camera.MinimumZoom = .05f;
       Camera.MaximumZoom = 1.5f;
@@ -106,10 +106,10 @@ namespace NewProject
 
     private void CreateMobs(Map map)
     {
-      int numMobs = 800;
+      int numMobs = 1000;
       for (int i = 0; i < numMobs; i++)
       {
-        var newBat = AddEntity<BatEntity>(Pool<BatEntity>.Obtain());
+        var newBat = AddEntity(Pool<BatEntity>.Obtain());
         newBat.SetEnabled(true);
       }
     }

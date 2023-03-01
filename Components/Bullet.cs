@@ -9,7 +9,7 @@ namespace NewProject
 
     SubpixelVector2 _subpixelV2 = new SubpixelVector2();
 
-    float liveTime = 15f;
+    float liveTime = 50f;
     float spawnTime = 0;
 
     float damage = 50f;
@@ -62,6 +62,12 @@ namespace NewProject
     Vector2 GetMoveDir()
     {
       return new Vector2(Mathf.Cos(Transform.Rotation), Mathf.Sin(Transform.Rotation));
+    }
+
+    public override void OnDisabled()
+    {
+      base.OnDisabled();
+      Debug.Log(Entity.Name + " has been disabled.");
     }
   }
 }

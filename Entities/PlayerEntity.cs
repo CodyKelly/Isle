@@ -13,7 +13,12 @@ namespace NewProject
       base.OnAddedToScene();
       var map = ((BasicScene)Scene).Map;
 
-      AddComponent(new PlayerController(map));
+      var downAtlas = Scene.Content.LoadTexture(Nez.Content.Textures.Character.Armorlancer.Armorlancerdownpng);
+      var sideAtlas = Scene.Content.LoadTexture(Nez.Content.Textures.Character.Armorlancer.Armorlancersidepng);
+      var upAtlas = Scene.Content.LoadTexture(Nez.Content.Textures.Character.Armorlancer.Armorlanceruppng);
+
+      AddComponent(new AnimationController(ref sideAtlas, ref downAtlas, ref upAtlas, 5f));
+      AddComponent(new PlayerController());
       AddComponent(new Health());
 
       Transform.SetPosition(map.TileToWorldPosition(map.HighestPoint));

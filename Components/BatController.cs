@@ -1,25 +1,28 @@
 using Nez;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using Nez.Sprites;
-using Nez.Textures;
-using Nez.ImGuiTools;
 
 namespace NewProject
 {
-  class BatController : AnimatedController
+  class BatController : Controller, IUpdatable
   {
     float turnTimer = 0f;
     float lastTurn = 0f;
-    float maxTurnTime = 10;
+    float maxTurnTime = 30;
 
-    public override void Update()
+    Transform transform;
+
+    Map _map;
+
+    SubpixelVector2 _movementSubpixel;
+
+    Vector2 movement;
+    Mover mover;
+
+    public void Update()
     {
-      base.Update();
-
       var currentTime = Time.TotalTime;
 
-      var pos = Entity.Position;
+      var pos = transform.Position;
       if (pos.X < 0 || pos.X > _map.WorldWidth)
       {
         MoveDir = new Vector2(-MoveDir.X, MoveDir.Y);
@@ -34,27 +37,27 @@ namespace NewProject
         turnTimer = Random.NextFloat(maxTurnTime);
         MoveDir = Random.NextUnitVector();
       }
+
+      movement = MoveDir * Speed * Time.DeltaTime;
+
+      if (!mover.CalculateMovement(ref movement, out _))
+      {
+        _movementSubpixel.Update(ref movement);
+        mover.ApplyMovement(movement);
+      }
+      // transform.SetPosition(transform.Position + movement);
     }
 
     public override void OnAddedToEntity()
     {
-      _collider = Entity.AddComponent<BoxCollider>();
-      base.OnAddedToEntity();
       MaxSpeed = 850;
-      _framerate = 8f;
-      turnTimer = Random.NextFloat(maxTurnTime);
+      turnTimer = maxTurnTime;//Random.NextFloat(maxTurnTime);
       MoveDir = Random.NextUnitVector();
+      mover = Entity.AddComponent(new Mover());
+      transform = Transform;
       _map = ((BasicScene)Entity.Scene).Map;
-    }
 
-    protected override void LoadTextures()
-    {
-      if (_upAtlas == null)
-      {
-        _downAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Bat.Batpng);
-        _sideAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Bat.Batpng);
-        _upAtlas = Entity.Scene.Content.LoadTexture(Nez.Content.Textures.Character.Bat.Batpng);
-      }
+      base.OnAddedToEntity();
     }
   }
 }

@@ -45,13 +45,12 @@ namespace Isle
         _movementSubpixel.Update(ref movement);
         mover.ApplyMovement(movement);
       }
-      // transform.SetPosition(transform.Position + movement);
     }
 
     public override void OnAddedToEntity()
     {
       MaxSpeed = 850;
-      turnTimer = maxTurnTime;//Random.NextFloat(maxTurnTime);
+      turnTimer = maxTurnTime;
       MoveDir = Random.NextUnitVector();
       mover = Entity.AddComponent(new Mover());
       transform = Transform;

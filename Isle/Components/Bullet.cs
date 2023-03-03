@@ -67,7 +67,6 @@ namespace Isle
     public override void OnDisabled()
     {
       base.OnDisabled();
-      Debug.Log(Entity.Name + " has been disabled.");
     }
   }
 }

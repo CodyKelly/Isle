@@ -12,7 +12,7 @@ namespace Isle
     float liveTime = 50f;
     float spawnTime = 0;
 
-    float damage = 50f;
+    float damage = 2f;
 
     float lastRotation;
 

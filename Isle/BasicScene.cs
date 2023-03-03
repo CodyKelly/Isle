@@ -109,7 +109,7 @@ namespace Isle
       int numMobs = 1000;
       for (int i = 0; i < numMobs; i++)
       {
-        var newBat = AddEntity(Pool<BatEntity>.Obtain());
+        var newBat = AddEntity(Pool<GruntEntity>.Obtain());
         newBat.SetEnabled(true);
       }
     }

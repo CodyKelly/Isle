@@ -13,7 +13,7 @@ namespace Isle
     Map _map;
     Mover _mover;
 
-    float fireRate = .05f;
+    float fireRate = .5f;
     float lastFire = 0;
     bool firing = false;
     float fireSpawnDistance = 80f;

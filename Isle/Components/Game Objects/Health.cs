@@ -4,7 +4,10 @@ namespace Isle
 {
   class Health : Component
   {
-    public float Value { get; set; } = 100f;
+    public Health(float value) => Value = value;
+    public Health() : this(10f) { }
+
+    public float Value { get; set; }
 
     public void GiveDamage(float amount)
     {

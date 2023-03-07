@@ -1,22 +1,27 @@
 using Nez;
 using Nez.Sprites;
+using Microsoft.Xna.Framework;
 
 namespace Isle
 {
   class SetRenderLayerByPos : Component, IUpdatable
   {
-    RectangleF _bounds;
     SpriteRenderer _renderer;
+    Vector2 lastPos;
 
     public override void OnAddedToEntity()
     {
-      _bounds = Entity.GetComponent<Collider>().Bounds;
-      _renderer.SetRenderLayer(-(int)_bounds.Bottom - (int)(_bounds.Height / 2f));
+      _renderer = Entity.GetComponent<SpriteRenderer>();
+      _renderer.SetRenderLayer(-(int)_renderer.Bounds.Bottom);
+      lastPos = Entity.Position;
     }
 
     public void Update()
     {
-      _renderer.SetRenderLayer(-(int)_bounds.Bottom - (int)(_bounds.Height / 2f));
+      if (Entity.Position != lastPos)
+      {
+        _renderer.SetRenderLayer(-(int)_renderer.Bounds.Bottom);
+      }
     }
   }
 }

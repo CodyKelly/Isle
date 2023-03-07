@@ -18,8 +18,7 @@ namespace Isle
 
       AddRenderer(new RenderLayerExcludeRenderer(0, new int[] { RenderLayers.SCREEN_SPACE_LAYER }));
       AddRenderer(new ScreenSpaceRenderer(1, new int[] { RenderLayers.SCREEN_SPACE_LAYER }));
-      // SetDefaultDesignResolution(1024, 1024, SceneResolutionPolicy.BestFit);
-      Screen.SetSize(1024, 720);
+      // Screen.SetSize(1024, 720);
 
       Dictionary<int, Sprite> tileAtlas = new Dictionary<int, Sprite>();
       var atlas = Content.LoadTexture(Nez.Content.Textures.Terrain_atlaspng);
@@ -56,7 +55,6 @@ namespace Isle
         null
       );
 
-
       Tile sandTile = new Tile(
         "sand",
         1,
@@ -68,7 +66,7 @@ namespace Isle
 
 
       var mapEntity = CreateEntity("Map");
-      Map = mapEntity.AddComponent(new Map(1000, 1000, new Tile[] { waterTile, grassTile, sandTile }));
+      Map = mapEntity.AddComponent(new Map(200, 200, new Tile[] { waterTile, grassTile, sandTile }));
       Map.Generate();
       mapEntity.Scale = Vector2.One * 2f;
       var mapRenderer = mapEntity.AddComponent(new MapRenderer(Map));
@@ -93,7 +91,9 @@ namespace Isle
 
       // Camera.Entity.AddComponent(new CameraController());
 
+      Camera.Entity.SetPosition(Map.WorldWidth / 2f, Map.WorldHeight / 2f);
       Camera.Entity.AddComponent(new ScrollZoom(Camera));
+      Camera.Entity.AddComponent(new ClickToExplode());
       // Camera.Entity.AddComponent(new GenerateNewMap(Map));
       Camera.Entity.UpdateOrder = int.MaxValue;
       Camera.MinimumZoom = .05f;
@@ -106,11 +106,19 @@ namespace Isle
 
     private void CreateMobs(Map map)
     {
-      int numMobs = 1000;
-      for (int i = 0; i < numMobs; i++)
+      int mobsWidth = 50;
+      int mobsHeight = 50;
+      int spacing = 5;
+      int width = 16 * 3;
+      Vector2 initialPos = new Vector2(Map.WorldWidth / 2 - (mobsWidth * 16 * 3 + mobsWidth * spacing) / 2, Map.WorldHeight / 2 - (mobsHeight * 16 * 3 + mobsHeight * spacing) / 2);//0);//
+      for (int y = 0; y < mobsHeight; y++)
       {
-        var newBat = AddEntity(Pool<GruntEntity>.Obtain());
-        newBat.SetEnabled(true);
+        for (int x = 0; x < mobsWidth; x++)
+        {
+          var newEnemy = AddEntity(Pool<GruntEntity>.Obtain());
+          newEnemy.SetPosition(new Vector2(initialPos.X + x * width + spacing * x, initialPos.Y + y * width + spacing * y));
+          newEnemy.SetEnabled(true);
+        }
       }
     }
 

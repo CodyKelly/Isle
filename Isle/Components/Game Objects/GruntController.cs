@@ -1,4 +1,5 @@
 using Nez;
+using Nez.AI.FSM;
 using Microsoft.Xna.Framework;
 
 namespace Isle
@@ -13,11 +14,6 @@ namespace Isle
 
     Map _map;
 
-    SubpixelVector2 _movementSubpixel;
-
-    Vector2 movement;
-    Mover mover;
-
     public void Update()
     {
       Speed = MaxSpeed;
@@ -28,44 +24,22 @@ namespace Isle
         Speed /= 2f;
       }
 
-      var currentTime = Time.TotalTime;
-
-      var pos = transform.Position;
-      if (pos.X < 0 || pos.X > _map.WorldWidth)
-      {
-        MoveDir = new Vector2(-MoveDir.X, MoveDir.Y);
-      }
-      if (pos.Y < 0 || pos.Y > _map.WorldHeight)
-      {
-        MoveDir = new Vector2(MoveDir.X, -MoveDir.Y);
-      }
-      if (currentTime - lastTurn > turnTimer)
-      {
-        lastTurn = currentTime;
-        turnTimer = Random.NextFloat(maxTurnTime);
-        MoveDir = Random.NextUnitVector();
-      }
-
-      movement = MoveDir * Speed * Time.DeltaTime;
-
-      if (!mover.CalculateMovement(ref movement, out _))
-      {
-        _movementSubpixel.Update(ref movement);
-        mover.ApplyMovement(movement);
-      }
-      // transform.SetPosition(transform.Position + movement);
+      ((GameEntity)Entity).Velocity += Speed * new Vector2(0, 0);
     }
 
     public override void OnAddedToEntity()
     {
-      MaxSpeed = 500;
+      MaxSpeed = 1.5f;
       turnTimer = maxTurnTime;//Random.NextFloat(maxTurnTime);
-      MoveDir = Random.NextUnitVector();
-      mover = Entity.AddComponent(new Mover());
       transform = Transform;
       _map = ((BasicScene)Entity.Scene).Map;
 
       base.OnAddedToEntity();
+    }
+
+    public void Explode()
+    {
+
     }
   }
 }

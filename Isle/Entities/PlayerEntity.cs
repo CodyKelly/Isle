@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace Isle
 {
-  class PlayerEntity : Entity
+  class PlayerEntity : GameEntity
   {
     private Health _health;
 
@@ -18,10 +18,12 @@ namespace Isle
       var upAtlas = Scene.Content.LoadTexture(Nez.Content.Textures.Character.Armorlancer.Armorlanceruppng);
 
       AddComponent(new AnimationController(ref sideAtlas, ref downAtlas, ref upAtlas, 5f));
+      AddComponent(new BoxCollider(-8, 4, 16, 4));
       AddComponent(new PlayerController());
+      AddComponent(new SetRenderLayerByPos());
       AddComponent(new Health());
 
-      Transform.SetPosition(map.TileToWorldPosition(map.HighestPoint));
+      Transform.SetPosition(map.WorldWidth / 2 - 20, map.WorldHeight / 2);
     }
 
     public override void OnRemovedFromScene()

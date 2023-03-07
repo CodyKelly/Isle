@@ -23,7 +23,7 @@ namespace Isle
 
     public void Update()
     {
-      var moveDir = _controller.MoveDir;
+      var moveDir = ((GameEntity)Entity).Velocity;
 
       if (moveDir != Vector2.Zero)
       {

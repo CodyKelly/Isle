@@ -11,9 +11,8 @@ namespace Isle
     VirtualAxis _xAxisInput;
     VirtualAxis _yAxisInput;
     Map _map;
-    Mover _mover;
 
-    float fireRate = .5f;
+    float fireRate = .05f;
     float lastFire = 0;
     bool firing = false;
     float fireSpawnDistance = 80f;
@@ -28,8 +27,7 @@ namespace Isle
         Speed /= 2f;
       }
 
-      MoveDir = new Vector2(_xAxisInput.Value, _yAxisInput.Value) * Speed * Time.DeltaTime;
-      _mover.Move(MoveDir, out var res);
+      ((GameEntity)Entity).Velocity += new Vector2(_xAxisInput.Value, _yAxisInput.Value) * Speed;// * Time.DeltaTime;
 
       float currentTime = Time.TotalTime;
       if (Input.LeftMouseButtonPressed) { firing = true; }
@@ -52,9 +50,9 @@ namespace Isle
     public override void OnAddedToEntity()
     {
       Entity.Scale = Vector2.One * 3f;
-      MaxSpeed = 500f;
+      // ((GameEntity)Entity).friction = 0.1f;
+      MaxSpeed = 2f;
       _map = ((BasicScene)Entity.Scene).Map;
-      _mover = Entity.AddComponent<Mover>();
       SetupInput();
       base.OnAddedToEntity();
     }

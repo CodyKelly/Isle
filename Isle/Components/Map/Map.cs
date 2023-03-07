@@ -55,7 +55,7 @@ namespace Isle
         {
           float nx = 2f * (float)x / (float)Width - 1f;
           float ny = 2f * (float)y / (float)Height - 1f;
-          float dist = MathHelper.Min(1f, (nx * nx + ny * ny) / sqrt2);
+          float dist = 0;//MathHelper.Min(1f, (nx * nx + ny * ny) / sqrt2);
           float value = 0;
           float multiplierSum = 0;
           for (int i = 1; i <= Octaves; i++)
@@ -66,11 +66,13 @@ namespace Isle
             value += multiplier * ((_noise.GetNoise((float)x * (float)i, (float)y * (float)i)) + 1) / 2f;
           }
           value /= multiplierSum;
-          value = MathHelper.Max(0f, (value - (-Mathf.Cos(dist * MathHelper.TwoPi) + 1) / 2));
+          // value = MathHelper.Max(0f, (value - (-Mathf.Cos(dist * MathHelper.TwoPi) + 1) / 2));
           RawValues[x, y] = value;
+          // var value = 1f;
+          // RawValues[x, y] = value;
           for (int i = 0; i < Tiles.Length; i++)
           {
-            if (value >= Tiles[i].StartRange && value < Tiles[i].EndRange)
+            if (value > Tiles[i].StartRange && value <= Tiles[i].EndRange)
             {
               TileValues[x, y] = i;
             }

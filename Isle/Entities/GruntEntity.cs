@@ -4,11 +4,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Isle
 {
-  class GruntEntity : Entity, IPoolable
+  class GruntEntity : GameEntity, IPoolable
   {
     private Health _health;
-    float hp = 10f;
+    float hp = 2f;
     static Texture2D downAtlas, sideAtlas, upAtlas;
+
 
     public override void OnAddedToScene()
     {
@@ -23,7 +24,8 @@ namespace Isle
 
       AddComponent(new GruntController());
       AddComponent(new AnimationController(ref sideAtlas, ref downAtlas, ref upAtlas, 8f));
-      AddComponent(new BoxCollider());
+      AddComponent(new BoxCollider(-8, 4, 16, 4));
+      AddComponent(new SetRenderLayerByPos());
       _health = AddComponent(new Health(hp));
 
       Transform.SetScale(3f);
@@ -41,7 +43,7 @@ namespace Isle
     public void Reset()
     {
       var map = ((BasicScene)Scene).Map;
-      Transform.SetPosition(new Vector2(Nez.Random.NextFloat() * map.WorldWidth, Nez.Random.NextFloat() * map.WorldHeight));
+      // Transform.SetPosition(new Vector2(Nez.Random.NextFloat() * map.WorldWidth, Nez.Random.NextFloat() * map.WorldHeight));
       _health.Value = hp;
     }
   }

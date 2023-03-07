@@ -15,7 +15,12 @@ namespace Isle
     {
       base.Initialize();
 
-      Physics.SpatialHashCellSize = 1000;
+      Screen.PreferredBackBufferWidth = Screen.MonitorWidth;
+      Screen.PreferredBackBufferHeight = Screen.MonitorHeight;
+      Screen.IsFullscreen = true;
+      Screen.ApplyChanges();
+
+      // Physics.SpatialHashCellSize = 60;
 
       Scene = new BasicScene();
 

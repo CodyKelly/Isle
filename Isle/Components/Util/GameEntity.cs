@@ -9,13 +9,28 @@ namespace Isle
 
     Vector2 bounds;
 
+    float baseFriction = .25f;
     public float friction = 0.25f;
     float velocityThreshold = .01f;
     Mover mover;
 
+    Map _map;
+
     public override void Update()
     {
       base.Update();
+
+      Position = Vector2.Clamp(Position, Vector2.Zero, bounds);
+      Tile currentTile = _map.GetTileAtWorldPos(Position.X, Position.Y);
+      bool inWater = currentTile == null ? false : currentTile.Name == "water";
+      if (inWater)
+      {
+        friction = baseFriction * 3f;
+      }
+      else
+      {
+        friction = baseFriction;
+      }
 
       Position += Velocity;
       Velocity *= 1 - friction;
@@ -44,8 +59,8 @@ namespace Isle
 
       mover = AddComponent(new Mover());
 
-      var map = ((BasicScene)Scene).Map;
-      bounds = new Vector2(map.WorldWidth - 64, map.WorldHeight - 64);
+      _map = ((BasicScene)Scene).Map;
+      bounds = new Vector2(_map.WorldWidth - 64, _map.WorldHeight - 64);
     }
 
     bool InThreshold(float velocity)

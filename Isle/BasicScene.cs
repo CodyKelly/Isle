@@ -94,7 +94,7 @@ namespace Isle
       Camera.Entity.SetPosition(Map.WorldWidth / 2f, Map.WorldHeight / 2f);
       Camera.Entity.AddComponent(new ScrollZoom(Camera));
       Camera.Entity.AddComponent(new ClickToExplode());
-      // Camera.Entity.AddComponent(new GenerateNewMap(Map));
+      Camera.Entity.AddComponent(new GenerateNewMap(Map));
       Camera.Entity.UpdateOrder = int.MaxValue;
       Camera.MinimumZoom = .05f;
       Camera.MaximumZoom = 1.5f;

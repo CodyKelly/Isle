@@ -27,8 +27,8 @@ namespace Isle
     public Point HighestPoint { get { return highestPoint; } }
     private Point highestPoint = new Point();
 
-    public float[,] RawValues { get; set; }
-    public int[,] TileValues { get; set; }
+    public float[,] RawValues { get; private set; }
+    public int[,] TileValues { get; private set; }
 
     public int Octaves { get; set; } = 10;
     public int Seed { get; set; }
@@ -70,13 +70,7 @@ namespace Isle
           RawValues[x, y] = value;
           // var value = 1f;
           // RawValues[x, y] = value;
-          for (int i = 0; i < Tiles.Length; i++)
-          {
-            if (value > Tiles[i].StartRange && value <= Tiles[i].EndRange)
-            {
-              TileValues[x, y] = i;
-            }
-          }
+          TileValues[x, y] = TileValueFromRawValue(value);
           if (value > highestPointValue)
           {
             highestPointValue = value;
@@ -89,19 +83,31 @@ namespace Isle
 
     public Tile GetTile(int x, int y)
     {
-      if (x < 0 || x >= Width || y < 0 || y >= Height)
+      return Tiles[TileValues[x, y]];
+    }
+
+    int TileValueFromRawValue(float rawValue)
+    {
+      for (int i = 0; i < Tiles.Length; i++)
       {
-        return null;
-      }
-      float value = RawValues[x, y];
-      foreach (Tile tile in Tiles)
-      {
-        if (value >= tile.StartRange && value < tile.EndRange)
+        if (rawValue >= Tiles[i].StartRange && rawValue <= Tiles[i].EndRange)
         {
-          return tile;
+          return i;
         }
       }
-      return null;
+      throw new System.ArgumentOutOfRangeException("Can't convert raw value to tile");
+    }
+
+    public void SetValue(int x, int y, float value)
+    {
+      if (x < 0 || x >= Width || y < 0 || y >= Width)
+      {
+        throw new System.ArgumentOutOfRangeException("Pos is outside of map");
+      }
+
+      value = Mathf.Clamp01(value);
+      RawValues[x, y] = value;
+      TileValues[x, y] = TileValueFromRawValue(value);
     }
 
     public int WorldToTilePositionX(float x) => (int)(x / TileSize / Entity.Scale.X);

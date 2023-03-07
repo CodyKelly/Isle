@@ -20,12 +20,6 @@ namespace Isle
     public void Update()
     {
       Speed = MaxSpeed;
-      Tile currentTile = _map.GetTileAtWorldPos(Entity.Position.X, Entity.Position.Y);
-      bool inWater = currentTile == null ? false : currentTile.Name == "water";
-      if (inWater)
-      {
-        Speed /= 2f;
-      }
 
       ((GameEntity)Entity).Velocity += new Vector2(_xAxisInput.Value, _yAxisInput.Value) * Speed;// * Time.DeltaTime;
 

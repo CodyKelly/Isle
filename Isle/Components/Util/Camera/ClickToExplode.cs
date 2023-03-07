@@ -5,8 +5,10 @@ namespace Isle
 {
   class ClickToExplode : Component, IUpdatable
   {
-    float radius = 500;
+    float radius = 200;
     float power = 50;
+    float depth = .005f;
+    float damage = 2f;
     float explodeRate = .05f;
     float lastExplode = 0;
     bool makeItRain = false;
@@ -17,7 +19,7 @@ namespace Isle
       // if (Input.LeftMouseButtonDown)
       // {
       //   Vector2 mousePos = Entity.Scene.Camera.MouseToWorldPoint();
-      //   _explosive.Explode(mousePos, radius, power, 0);
+      //   _explosive.Explode(mousePos, radius, power, depth, 0);
       // }
       if (Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.K))
       {
@@ -31,7 +33,7 @@ namespace Isle
           lastExplode = Time.TotalTime;
           float x = Random.NextFloat() * ((BasicScene)Entity.Scene).Map.WorldWidth;
           float y = Random.NextFloat() * ((BasicScene)Entity.Scene).Map.WorldHeight;
-          _explosive.Explode(new Vector2(x, y), radius * 2, power * 1.5f, 0);
+          _explosive.Explode(new Vector2(x, y), radius * 2, power * 1.5f, depth, damage);
         }
       }
     }

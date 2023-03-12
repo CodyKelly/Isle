@@ -20,7 +20,7 @@ namespace Isle
       // Screen.IsFullscreen = true;
       // Screen.ApplyChanges();
 
-      // Physics.SpatialHashCellSize = 60;
+      Physics.SpatialHashCellSize = 60;
 
       Scene = new BasicScene();
 

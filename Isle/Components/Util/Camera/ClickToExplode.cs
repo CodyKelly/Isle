@@ -5,10 +5,10 @@ namespace Isle
 {
   class ClickToExplode : Component, IUpdatable
   {
-    float radius = 200;
+    float radius = 3000;
     float power = 50;
-    float depth = .005f;
-    float damage = 2f;
+    float depth = .5f;
+    float damage = 2000f;
     float explodeRate = .05f;
     float lastExplode = 0;
     bool makeItRain = false;
@@ -16,11 +16,11 @@ namespace Isle
 
     public void Update()
     {
-      // if (Input.LeftMouseButtonDown)
-      // {
-      //   Vector2 mousePos = Entity.Scene.Camera.MouseToWorldPoint();
-      //   _explosive.Explode(mousePos, radius, power, depth, 0);
-      // }
+      if (Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.E))//Input.LeftMouseButtonDown)
+      {
+        Vector2 mousePos = Entity.Scene.Camera.MouseToWorldPoint();
+        _explosive.Explode(mousePos, radius, power, depth, damage);
+      }
       if (Input.IsKeyPressed(Microsoft.Xna.Framework.Input.Keys.K))
       {
         makeItRain = !makeItRain;

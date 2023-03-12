@@ -7,7 +7,7 @@ namespace Isle
   {
     public void Explode(Vector2 position, float radius, float power, float depth, float damage)
     {
-      Collider[] colliders = new Collider[1000];
+      Collider[] colliders = new Collider[5000];
       int numCollisions = Physics.OverlapCircleAll(position, radius, colliders);
       for (int i = 0; i < numCollisions; i++)
       {

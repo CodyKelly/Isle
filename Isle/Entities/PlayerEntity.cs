@@ -23,7 +23,7 @@ namespace Isle
       AddComponent(new SetRenderLayerByPos());
       AddComponent(new Health());
 
-      Transform.SetPosition(map.WorldWidth / 2 - 20, map.WorldHeight / 2);
+      Transform.SetPosition(map.WorldWidth / 2, map.WorldHeight / 4);
     }
 
     public override void OnRemovedFromScene()

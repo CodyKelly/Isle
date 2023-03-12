@@ -10,36 +10,33 @@ namespace Isle
     float lastTurn = 0f;
     float maxTurnTime = 30;
 
+    Entity _player;
+
     Transform transform;
 
     Map _map;
 
     public void Update()
     {
-      Speed = MaxSpeed;
-      Tile currentTile = _map.GetTileAtWorldPos(Entity.Position.X, Entity.Position.Y);
-      bool inWater = currentTile == null ? false : currentTile.Name == "water";
-      if (inWater)
+      if (_player != null)
       {
-        Speed /= 2f;
+        var posDiff = _player.Position - Entity.Position;
+        posDiff.Normalize();
+        var movement = posDiff * Speed;
+        ((GameEntity)Entity).Velocity += movement;
       }
-
-      ((GameEntity)Entity).Velocity += Speed * new Vector2(0, 0);
     }
 
     public override void OnAddedToEntity()
     {
       MaxSpeed = 1.5f;
+      Speed = MaxSpeed;
       turnTimer = maxTurnTime;//Random.NextFloat(maxTurnTime);
       transform = Transform;
       _map = ((BasicScene)Entity.Scene).Map;
+      _player = ((BasicScene)Entity.Scene).Player;
 
       base.OnAddedToEntity();
-    }
-
-    public void Explode()
-    {
-
     }
   }
 }

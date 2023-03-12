@@ -45,6 +45,7 @@ namespace Isle
         );
       }
 
+      var t = Time.DeltaTime;
       var movement = Velocity * Time.DeltaTime;
       if (mover.CalculateMovement(ref movement, out _))
       {

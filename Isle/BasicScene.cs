@@ -12,6 +12,7 @@ namespace Isle
   class BasicScene : Scene
   {
     public Map Map { get; private set; }
+    public Entity Player { get; private set; }
     public override void Initialize()
     {
       base.Initialize();
@@ -66,7 +67,7 @@ namespace Isle
 
 
       var mapEntity = CreateEntity("Map");
-      Map = mapEntity.AddComponent(new Map(200, 200, new Tile[] { waterTile, grassTile, sandTile }));
+      Map = mapEntity.AddComponent(new Map(500, 500, new Tile[] { waterTile, grassTile, sandTile }));
       Map.Generate();
       mapEntity.Scale = Vector2.One * 2f;
       var mapRenderer = mapEntity.AddComponent(new MapRenderer(Map));
@@ -88,6 +89,7 @@ namespace Isle
       var player = AddEntity(new PlayerEntity());
       var followCamera = new FollowCamera(player);
       Camera.Entity.AddComponent(followCamera);
+      Player = player;
 
       // Camera.Entity.AddComponent(new CameraController());
 

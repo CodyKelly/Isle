@@ -5,6 +5,8 @@ using Nez.Textures;
 using Nez.BitmapFonts;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Isle
@@ -67,10 +69,19 @@ namespace Isle
 
 
       var mapEntity = CreateEntity("Map");
-      Map = mapEntity.AddComponent(new Map(500, 500, new Tile[] { waterTile, grassTile, sandTile }));
+      Map = mapEntity.AddComponent(new Map(1000, 1000, new Tile[] { waterTile, grassTile, sandTile }));
+      Stopwatch stopwatch = new Stopwatch();
+
+      stopwatch.Start();
+
       Map.Generate();
+
+      stopwatch.Stop();
+
+      Console.WriteLine("Time elapsed: {0}", stopwatch.Elapsed);
       mapEntity.Scale = Vector2.One * 2f;
       var mapRenderer = mapEntity.AddComponent(new MapRenderer(Map));
+      mapRenderer.AddComponent(new LightingSpinner());
       mapEntity.AddComponent(new CameraBounds(mapRenderer.Bounds));
       mapRenderer.RenderLayer = int.MaxValue;
 
@@ -91,7 +102,7 @@ namespace Isle
       Camera.Entity.AddComponent(followCamera);
       Player = player;
 
-      // Camera.Entity.AddComponent(new CameraController());
+      // Camera.Entity.AddComponent(new CameraController(800f, 20000f));
 
       Camera.Entity.SetPosition(Map.WorldWidth / 2f, Map.WorldHeight / 2f);
       Camera.Entity.AddComponent(new ScrollZoom(Camera));
@@ -101,16 +112,16 @@ namespace Isle
       Camera.MinimumZoom = .05f;
       Camera.MaximumZoom = 1.5f;
       Camera.Zoom = -1f;
-      // Camera.AddComponent(new SelectionManager().SetRenderLayer(RenderLayers.SCREEN_SPACE_LAYER));
+      Camera.AddComponent(new SelectionManager().SetRenderLayer(RenderLayers.SCREEN_SPACE_LAYER));
 
-      CreateMobs(Map);
+      // CreateMobs(Map);
     }
 
     private void CreateMobs(Map map)
     {
-      int mobsWidth = 50;
-      int mobsHeight = 50;
-      int spacing = 5;
+      int mobsWidth = 20;
+      int mobsHeight = 20;
+      int spacing = 1;
       int width = 16 * 3;
       Vector2 initialPos = new Vector2(Map.WorldWidth / 2 - (mobsWidth * 16 * 3 + mobsWidth * spacing) / 2, Map.WorldHeight / 2 - (mobsHeight * 16 * 3 + mobsHeight * spacing) / 2);//0);//
       for (int y = 0; y < mobsHeight; y++)
@@ -133,12 +144,12 @@ namespace Isle
 
       for (int i = 0; i < numTrees; i++)
       {
-        float x = (int)(Random.NextFloat() * maxRange) * multiplier;
-        float y = (int)(Random.NextFloat() * maxRange) * multiplier;
+        float x = (int)(Nez.Random.NextFloat() * maxRange) * multiplier;
+        float y = (int)(Nez.Random.NextFloat() * maxRange) * multiplier;
         var position = new Vector2(x, y);
         var newTree = CreateEntity("tree", position);
         newTree.Scale = Vector2.One * 2f;
-        var newSpriteRenderer = new SpriteRenderer(sprites[Random.Range(0, sprites.Length)]);
+        var newSpriteRenderer = new SpriteRenderer(sprites[Nez.Random.Range(0, sprites.Length)]);
         newTree.AddComponent(newSpriteRenderer);
         var renderOrder = -(int)newSpriteRenderer.Bounds.Bottom;
         newSpriteRenderer.RenderLayer = renderOrder;

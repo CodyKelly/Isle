@@ -1,5 +1,6 @@
 using Nez;
 using Microsoft.Xna.Framework;
+using System.Threading.Tasks;
 
 namespace Isle
 {
@@ -17,30 +18,30 @@ namespace Isle
 
     public float WorldWidth { get { return worldWidth.HasValue ? worldWidth.Value : (worldWidth = (float?)((float)Width * (float)TileSize * Entity.Scale.X)).Value; } }
     public float WorldHeight { get { return worldHeight.HasValue ? worldHeight.Value : (worldHeight = (float?)((float)Height * (float)TileSize * Entity.Scale.Y)).Value; } }
-    float? worldWidth;
-    float? worldHeight;
+    protected float? worldWidth;
+    protected float? worldHeight;
 
     public Tile[] Tiles { get; }
 
     public int TileSize { get; } = 32;
 
     public Point HighestPoint { get { return highestPoint; } }
-    private Point highestPoint = new Point();
+    protected Point highestPoint = new Point();
 
-    public float[,] RawValues { get; private set; }
-    public int[,] TileValues { get; private set; }
+    public float[,] RawValues { get; protected set; }
+    public int[,] TileValues { get; protected set; }
 
-    public int Octaves { get; set; } = 10;
+    public int Octaves { get; set; } = 7;
     public int Seed { get; set; }
 
-    private FastNoiseLite _noise = new FastNoiseLite();
+    protected FastNoiseLite _noise = new FastNoiseLite();
 
     public override void OnAddedToEntity()
     {
-      Seed = Random.NextInt(1000000);
+      Seed = Nez.Random.NextInt(1000000);
     }
 
-    public void Generate()
+    virtual public void Generate()
     {
       float highestPointValue = -1f;
       _noise.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
@@ -62,7 +63,7 @@ namespace Isle
           {
             float multiplier = 1f / (float)i;
             multiplierSum += multiplier;
-            _noise.SetSeed(Seed + i);
+            // _noise.SetSeed(Seed + i);
             value += multiplier * ((_noise.GetNoise((float)x * (float)i, (float)y * (float)i)) + 1) / 2f;
           }
           value /= multiplierSum;
@@ -81,12 +82,57 @@ namespace Isle
       }
     }
 
+    public void GenerateFast()
+    {
+      float highestPointValue = -1f;
+      _noise.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
+      _noise.SetSeed(Seed);
+      float sqrt2 = Mathf.Sqrt(2);
+      RawValues = new float[Width, Height];
+      TileValues = new int[Width, Height];
+
+      // Pre-calculate multipliers
+      float[] multipliers = new float[Octaves];
+      for (int i = 1; i <= Octaves; i++)
+      {
+        multipliers[i - 1] = 1f / (float)i;
+      }
+
+      // Parallelize outer loops
+      Parallel.For(0, Height, y =>
+      {
+        for (int x = 0; x < Width; x++)
+        {
+          // float nx = 2f * (float)x / (float)Width - 1f;
+          // float ny = 2f * (float)y / (float)Height - 1f;
+          // float dist = 0;
+          // float value = 0;
+          // float multiplierSum = 0;
+          // for (int i = 1; i <= Octaves; i++)
+          // {
+          //     multiplierSum += multipliers[i - 1];
+          //     value += multipliers[i - 1] * ((_noise.GetNoise((float)x * (float)i, (float)y * (float)i)) + 1) / 2f;
+          // }
+          // value /= multiplierSum;
+          float value = 1f;
+          RawValues[x, y] = value;
+          TileValues[x, y] = TileValueFromRawValue(value);
+          // if (value > highestPointValue)
+          // {
+          //     highestPointValue = value;
+          //     highestPoint.X = x;
+          //     highestPoint.Y = y;
+          // }
+        }
+      });
+    }
+
     public Tile GetTile(int x, int y)
     {
       return Tiles[TileValues[x, y]];
     }
 
-    int TileValueFromRawValue(float rawValue)
+    protected int TileValueFromRawValue(float rawValue)
     {
       for (int i = 0; i < Tiles.Length; i++)
       {
@@ -100,7 +146,7 @@ namespace Isle
 
     public void SetValue(int x, int y, float value)
     {
-      if (x < 0 || x >= Width || y < 0 || y >= Width)
+      if (x < 0 || x >= Width || y < 0 || y >= Height)
       {
         throw new System.ArgumentOutOfRangeException("Pos is outside of map");
       }

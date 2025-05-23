@@ -150,7 +150,7 @@ def main(winstyle=0):
 # call the "main" function if running this script
 if __name__ == "__main__":
   if len(sys.argv) != 3:
-    print("args wrong")
+    print("usage: python tilefinder.py [image path] [tile size]")
     exit()
   main()
   pg.quit()

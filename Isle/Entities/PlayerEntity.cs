@@ -1,6 +1,7 @@
 using System;
 using Nez;
 using Microsoft.Xna.Framework;
+using System.Security;
 
 namespace Isle
 {
@@ -11,6 +12,7 @@ namespace Isle
     public override void OnAddedToScene()
     {
       base.OnAddedToScene();
+      Name = "Player";
       var map = ((BasicScene)Scene).Map;
 
       var downAtlas = Scene.Content.LoadTexture(Nez.Content.Textures.Character.Armorlancer.Armorlancerdownpng);

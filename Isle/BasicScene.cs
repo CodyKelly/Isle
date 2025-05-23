@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Isle
 {
@@ -86,12 +85,14 @@ namespace Isle
       mapRenderer.RenderLayer = int.MaxValue;
 
       ClearColor = Color.Black;
-      List<Sprite> decorations = new List<Sprite>();
-      decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
-      decorations.Add(new Sprite(atlas, new Rectangle(32 * 15, 32 * 24, 32 * 1, 32 * 2), Vector2.Zero));
-      decorations.Add(new Sprite(atlas, new Rectangle(32 * 19, 32 * 15, 32 * 1, 32 * 3), Vector2.Zero));
-      decorations.Add(new Sprite(atlas, new Rectangle(32 * 11, 32 * 7, 32 * 1, 32 * 1), Vector2.Zero));
-      decorations.Add(new Sprite(atlas, new Rectangle(32 * 1, 1024 - 32, 32 * 1, 32 * 1), Vector2.Zero));
+      List<Sprite> decorations = new List<Sprite>
+      {
+        new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero),
+        new Sprite(atlas, new Rectangle(32 * 15, 32 * 24, 32 * 1, 32 * 2), Vector2.Zero),
+        new Sprite(atlas, new Rectangle(32 * 19, 32 * 15, 32 * 1, 32 * 3), Vector2.Zero),
+        new Sprite(atlas, new Rectangle(32 * 11, 32 * 7, 32 * 1, 32 * 1), Vector2.Zero),
+        new Sprite(atlas, new Rectangle(32 * 1, 1024 - 32, 32 * 1, 32 * 1), Vector2.Zero)
+      };
       // decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
       // decorations.Add(new Sprite(atlas, new Rectangle(1024 - 32 * 3, 1024 - 32 * 4, 32 * 3, 32 * 4), Vector2.Zero));
 
@@ -101,6 +102,9 @@ namespace Isle
       var followCamera = new FollowCamera(player);
       Camera.Entity.AddComponent(followCamera);
       Player = player;
+
+      var building = AddEntity(new BuildingEntity());
+      building.SetPosition(Map.WorldWidth / 2, Map.WorldHeight / 2);
 
       // Camera.Entity.AddComponent(new CameraController(800f, 20000f));
 

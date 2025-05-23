@@ -6,14 +6,20 @@ namespace Isle
 {
   class CameraController : Component, IUpdatable
   {
+    public CameraController(float acceleration = 400f, float maxSpeed = 5000f)
+    {
+      Acceleration = acceleration;
+      MaxSpeed = maxSpeed;
+    }
+
     VirtualAxis _xAxisInput;
     VirtualAxis _yAxisInput;
     SubpixelVector2 _subpixelV2 = new SubpixelVector2();
 
     [Inspectable]
     Vector2 speed = Vector2.Zero;
-    float acceleration = 400f;
-    float maxSpeed = 5000f;
+    float Acceleration { get; set; }
+    float MaxSpeed { get; set; }
 
     Mover _mover;
 
@@ -23,18 +29,18 @@ namespace Isle
 
       speed = new Vector2(
         moveDir.X != 0f ?
-          Mathf.Clamp(speed.X + moveDir.X * acceleration, -maxSpeed, maxSpeed) :
+          Mathf.Clamp(speed.X + moveDir.X * Acceleration, -MaxSpeed, MaxSpeed) :
         speed.X < 0 ?
-          Mathf.Clamp(speed.X + acceleration, -maxSpeed, 0) :
+          Mathf.Clamp(speed.X + Acceleration, -MaxSpeed, 0) :
         speed.X > 0 ?
-          Mathf.Clamp(speed.X - acceleration, 0, maxSpeed) :
+          Mathf.Clamp(speed.X - Acceleration, 0, MaxSpeed) :
         0f,
         moveDir.Y != 0f ?
-          Mathf.Clamp(speed.Y + moveDir.Y * acceleration, -maxSpeed, maxSpeed) :
+          Mathf.Clamp(speed.Y + moveDir.Y * Acceleration, -MaxSpeed, MaxSpeed) :
         speed.Y < 0 ?
-          Mathf.Clamp(speed.Y + acceleration, -maxSpeed, 0) :
+          Mathf.Clamp(speed.Y + Acceleration, -MaxSpeed, 0) :
         speed.Y > 0 ?
-          Mathf.Clamp(speed.Y - acceleration, 0, maxSpeed) :
+          Mathf.Clamp(speed.Y - Acceleration, 0, MaxSpeed) :
         0f
       );
 

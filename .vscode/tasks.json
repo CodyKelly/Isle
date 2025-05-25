@@ -1,0 +1,205 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Restore Project",
+            "type": "shell",
+            "command": "msbuild /t:restore",
+            "group": "build",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            // this does a bunch of stuff:
+            // - update submodules to lastest (fetch latest Nez version)
+            // - clean, restore and rebuild Nez.sln (nuget restore to get latest packages)
+            // - clean, restore and rebuild Nez.FNA.sln (nuget restore Nez.FNA)
+            "label": "Update, Restore and Rebuild Nez",
+            "type": "shell",
+            "command": "git submodule foreach --recursive git pull && msbuild Nez/Nez.sln /t:clean /t:restore && msbuild Nez/Nez.FNA.sln /t:clean /t:restore",
+            "group": "build",
+            "problemMatcher": "$msCompile",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+        },
+        {
+            "label": "Clean Project",
+            "type": "shell",
+            "command": "msbuild Isle /t:clean /p:configuration=Debug && msbuild Isle /t:clean /p:configuration=Release",
+            "group": "build",
+            "problemMatcher": "$msCompile",
+        },
+        {
+            "label": "Build (Debug) (old)",
+            "type": "shell",
+            "command": "dotnet",
+            "args": [
+                "build",
+                "Isle.sln",
+                "/property:GenerateTargetFrameworkAttribute=false",
+                "/p:configuration=Debug",
+                "/p:platform=Any CPU",
+                "/t:build"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile",
+        },
+        {
+            "label": "Build (Debug)",
+            "type": "shell",
+            "command": "msbuild",
+            "args": [
+                "Isle.sln",
+                "/property:GenerateTargetFrameworkAttribute=false",
+                "/p:configuration=Debug",
+                "/p:platform=Any CPU",
+                "/t:build"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile",
+        },
+        {
+            "label": "Build (Release)",
+            "type": "shell",
+            "command": "dotnet",
+            "args": [
+                "msbuild",
+                "Isle.sln",
+                "/property:GenerateTargetFrameworkAttribute=false",
+                "/p:configuration=Release",
+                "/p:platform=Any CPU",
+                "/t:build"
+            ],
+            "group": "build",
+            "problemMatcher": "$msCompile",
+        },
+        {
+            "label": "Build and Run (Debug)",
+            "type": "shell",
+            "group": "build",
+            "osx": {
+                "command": "DYLD_LIBRARY_PATH=${workspaceFolder}/Isle/bin/Debug/osx/ mono ${workspaceFolder}/Isle/bin/Debug/Isle.exe"
+            },
+            "linux": {
+                "command": "LD_LIBRARY_PATH=${workspaceFolder}/Isle/bin/Debug/bin/lib64 mono ${workspaceFolder}/Isle/bin/Debug/Isle.exe"
+            },
+            "windows": {
+                "command": "start",
+                "args": [
+                    "${workspaceFolder}/Isle/bin/Debug/Isle.exe"
+                ]
+            },
+            "dependsOn": "Build (Debug)",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build and Run (Release)",
+            "type": "shell",
+            "group": "build",
+            "osx": {
+                "command": "DYLD_LIBRARY_PATH=${workspaceFolder}/Isle/bin/Release/osx/ mono ${workspaceFolder}/Isle/bin/Release/Isle.exe"
+            },
+            "linux": {
+                "command": "DYLD_LIBRARY_PATH=${workspaceFolder}/Isle/bin/Release/osx/ mono ${workspaceFolder}/Isle/bin/Release/Isle.exe"
+            },
+            "windows": {
+                "command": "start",
+                "args": [
+                    "${workspaceFolder}/Isle/bin/Release/Isle.exe"
+                ]
+            },
+            "dependsOn": "Build (Release)",
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build Effects",
+            "type": "shell",
+            "group": "build",
+            "osx": {
+                "command": "${workspaceFolder}/.vscode/buildEffects.sh"
+            },
+            "linux": {
+                "command": "${workspaceFolder}/.vscode/buildEffects.sh"
+            },
+            "windows": {
+                "command": "powershell",
+                "args": [
+                    "-File",
+                    "${workspaceFolder}/.vscode/buildEffects.ps1"
+                ],
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Build Content",
+            "type": "shell",
+            "group": "build",
+            "command": "msbuild /t:BuildContent",
+            "options": {
+                "cwd": "${workspaceFolder}/Isle"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Force Build Content",
+            "type": "shell",
+            "group": "build",
+            "osx": {
+                "command": "mono /Applications/Pipeline.app/Contents/MonoBundle/MGCB.exe /@:Content.mgcb -r",
+            },
+            "linux": {
+                "command": "mono /Applications/Pipeline.app/Contents/MonoBundle/MGCB.exe /@:Content.mgcb -r",
+            },
+            "windows": {
+                "command": "C:/Program Files (x86)/MSBuild/MonoGame/v3.0/Tools/MGCB.exe",
+                "args": [
+                    "/@:Content.mgcb",
+                    "-r"
+                ]
+            },
+            "options": {
+                "cwd": "${workspaceFolder}/Isle/CompiledContent"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Open Pipeline Tool",
+            "type": "shell",
+            "group": "build",
+            "osx": {
+                "command": "export MONOGAME_PIPELINE_PROJECT=${workspaceFolder}/Isle/CompiledContent/Content.mgcb && /Applications/Pipeline.app/Contents/MacOS/Pipeline"
+            },
+            "linux": {
+                "command": "export MONOGAME_PIPELINE_PROJECT=${workspaceFolder}/Isle/CompiledContent/Content.mgcb && /Applications/Pipeline.app/Contents/MacOS/Pipeline"
+            },
+            "windows": {
+                "command": "${workspaceFolder}/Isle/CompiledContent/Content.mgcb"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "Process T4 Templates",
+            "type": "shell",
+            "osx": {
+                "command": "${workspaceFolder}/.vscode/processT4Templates.sh"
+            },
+            "linux": {
+                "command": "${workspaceFolder}/.vscode/processT4Templates.sh"
+            },
+            "windows": {
+                "command": "powershell",
+                "args": [
+                    "-File",
+                    "${workspaceFolder}/.vscode/processT4Templates.ps1"
+                ]
+            },
+            "group": "build",
+            "problemMatcher": "$msCompile",
+        },
+    ]
+}

@@ -1,0 +1,79 @@
+{
+    // Change "mono" to "clr" for 64-bit .NET Framework debugging on Windows.
+    // (See: https://github.com/OmniSharp/omnisharp-vscode/wiki/Desktop-.NET-Framework)
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch (Mac)",
+            "type": "mono",
+            "request": "launch",
+            "program": "${workspaceFolder}/Isle/bin/Debug/Isle.exe",
+            "cwd": "${workspaceFolder}/Isle",
+            "preLaunchTask": "Build (Debug)",
+            "osx": {
+                "env": {
+                    "DYLD_LIBRARY_PATH": "${workspaceFolder}/Isle/bin/Debug/osx/"
+                }
+            }
+        },
+        {
+            "name": "Launch Without Building (Mac)",
+            "type": "mono",
+            "request": "launch",
+            "program": "${workspaceFolder}/Isle/bin/Debug/Isle.exe",
+            "cwd": "${workspaceFolder}",
+            "osx": {
+                "env": {
+                    "DYLD_LIBRARY_PATH": "${workspaceFolder}/Isle/bin/Debug/osx/"
+                }
+            }
+        },
+        {
+            "name": "Launch (Linux)",
+            "type": "mono",
+            "request": "launch",
+            "program": "${workspaceFolder}/Isle/bin/Debug/Isle.exe",
+            "cwd": "${workspaceFolder}/Isle",
+            "preLaunchTask": "Build (Debug)",
+            "linux": {
+                "env": {
+                    "LD_LIBRARY_PATH": "${workspaceFolder}/Isle/bin/Debug/lib64/"
+                }
+            }
+        },
+        {
+            "name": "Launch Without Building (Linux)",
+            "type": "mono",
+            "request": "launch",
+            "program": "${workspaceFolder}/Isle/bin/Debug/Isle.exe",
+            "cwd": "${workspaceFolder}",
+            "linux": {
+                "env": {
+                    "LD_LIBRARY_PATH": "${workspaceFolder}/Isle/bin/Debug/lib64/"
+                }
+            }
+        },
+        {
+            "name": "Launch (Windows)",
+            "type": "clr",
+            "request": "launch",
+            "program": "${workspaceFolder}/Isle/bin/Debug/Isle.exe",
+            "cwd": "${workspaceFolder}/Isle",
+            "preLaunchTask": "Build (Debug)"
+        },
+        {
+            "name": "Launch Without Building (Windows)",
+            "type": "clr",
+            "request": "launch",
+            "program": "${workspaceFolder}/Isle/bin/Debug/Isle.exe",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Attach",
+            "type": "mono",
+            "request": "attach",
+            "address": "localhost",
+            "port": 55555
+        }
+    ]
+}

@@ -3,7 +3,7 @@ using Nez.Textures;
 
 namespace Isle
 {
-  class Tile
+  struct Tile
   {
     int _layer;
 

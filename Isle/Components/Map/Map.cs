@@ -6,23 +6,23 @@ namespace Isle
 {
   class Map : Component
   {
-    public Map(int width, int height, Tile[] tiles)
+    public Map(int width, int height, Tile[] tiles, int seed = 0)
     {
       Width = width;
       Height = height;
+      Seed = seed;
       Tiles = tiles;
     }
 
     public int Width { get; }
     public int Height { get; }
 
-    public float WorldWidth { get { return worldWidth.HasValue ? worldWidth.Value : (worldWidth = (float?)((float)Width * (float)TileSize * Entity.Scale.X)).Value; } }
-    public float WorldHeight { get { return worldHeight.HasValue ? worldHeight.Value : (worldHeight = (float?)((float)Height * (float)TileSize * Entity.Scale.Y)).Value; } }
+    public float WorldWidth { get { return worldWidth ?? (worldWidth = Width * TileSize * Entity.Scale.X).Value; } }
+    public float WorldHeight { get { return worldHeight ?? (worldHeight = Height * TileSize * Entity.Scale.Y).Value; } }
     protected float? worldWidth;
     protected float? worldHeight;
 
     public Tile[] Tiles { get; }
-
     public int TileSize { get; } = 32;
 
     public Point HighestPoint { get { return highestPoint; } }
@@ -39,6 +39,11 @@ namespace Isle
     public override void OnAddedToEntity()
     {
       Seed = Nez.Random.NextInt(1000000);
+    }
+
+    public Tile GetTile(int x, int y)
+    {
+      return Tiles[TileValues[x, y]];
     }
 
     virtual public void Generate()
@@ -80,56 +85,6 @@ namespace Isle
           }
         }
       }
-    }
-
-    public void GenerateFast()
-    {
-      float highestPointValue = -1f;
-      _noise.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
-      _noise.SetSeed(Seed);
-      float sqrt2 = Mathf.Sqrt(2);
-      RawValues = new float[Width, Height];
-      TileValues = new int[Width, Height];
-
-      // Pre-calculate multipliers
-      float[] multipliers = new float[Octaves];
-      for (int i = 1; i <= Octaves; i++)
-      {
-        multipliers[i - 1] = 1f / (float)i;
-      }
-
-      // Parallelize outer loops
-      Parallel.For(0, Height, y =>
-      {
-        for (int x = 0; x < Width; x++)
-        {
-          // float nx = 2f * (float)x / (float)Width - 1f;
-          // float ny = 2f * (float)y / (float)Height - 1f;
-          // float dist = 0;
-          // float value = 0;
-          // float multiplierSum = 0;
-          // for (int i = 1; i <= Octaves; i++)
-          // {
-          //     multiplierSum += multipliers[i - 1];
-          //     value += multipliers[i - 1] * ((_noise.GetNoise((float)x * (float)i, (float)y * (float)i)) + 1) / 2f;
-          // }
-          // value /= multiplierSum;
-          float value = 1f;
-          RawValues[x, y] = value;
-          TileValues[x, y] = TileValueFromRawValue(value);
-          // if (value > highestPointValue)
-          // {
-          //     highestPointValue = value;
-          //     highestPoint.X = x;
-          //     highestPoint.Y = y;
-          // }
-        }
-      });
-    }
-
-    public Tile GetTile(int x, int y)
-    {
-      return Tiles[TileValues[x, y]];
     }
 
     protected int TileValueFromRawValue(float rawValue)

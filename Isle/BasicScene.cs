@@ -80,7 +80,7 @@ namespace Isle
       Console.WriteLine("Time elapsed: {0}", stopwatch.Elapsed);
       mapEntity.Scale = Vector2.One * 2f;
       var mapRenderer = mapEntity.AddComponent(new MapRenderer(Map));
-      mapRenderer.AddComponent(new LightingSpinner());
+      // mapRenderer.AddComponent(new LightingSpinner());
       mapEntity.AddComponent(new CameraBounds(mapRenderer.Bounds));
       mapRenderer.RenderLayer = int.MaxValue;
 

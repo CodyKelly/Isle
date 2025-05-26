@@ -22,7 +22,7 @@ namespace Isle
 
       Position = Vector2.Clamp(Position, Vector2.Zero, bounds);
       Tile currentTile = _map.GetTileAtWorldPos(Position.X, Position.Y);
-      bool inWater = currentTile == null ? false : currentTile.Name == "water";
+      bool inWater = currentTile.Name == "water";
       if (inWater)
       {
         friction = baseFriction * 3f;
